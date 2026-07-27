@@ -1,0 +1,31 @@
+---
+title: "Modern E-Commerce Web App"
+summary: "Platform toko online interaktif dengan fitur katalog produk, keranjang belanja, dan sistem pembayaran terintegrasi."
+category: "Fullstack"
+year: 2026
+role: "Fullstack Developer"
+technologies: ["Next.js", "TypeScript", "Tailwind CSS", "PostgreSQL", "Prisma"]
+---
+
+# Modern E-Commerce Web App
+
+## 1. Ringkasan Proyek
+Aplikasi e-commerce modern ini dirancang untuk memberikan pengalaman berbelanja online yang cepat, responsif, dan intuitif pada berbagai perangkat.
+
+## 2. Masalah yang Dihadapi
+Toko konvensional sering menghadapi kendala dalam mengelola katalog produk secara manual, sinkronisasi stok real-time, serta proses pencarian produk yang lambat pada koneksi seluler.
+
+## 3. Solusi
+Dengan menggunakan arsitektur **Next.js App Router** dan **Static Site Generation (SSG)** dikombinasikan dengan caching data cerdas:
+- Halaman katalog produk dapat dimuat secara instan.
+- Pencarian dan pemfilteran produk berjalan secara real-time tanpa perlu me-load ulang seluruh halaman.
+- Keranjang belanja disimpan secara lokal dan tersinkronisasi saat pengguna melakukan login.
+
+## 4. Fitur Utama
+* **Responsive Product Catalog:** Tampilan grid produk yang menyesuaikan ukuran layar.
+* **Smart Filter & Search:** Memudahkan calon pembeli menemukan barang berdasarkan kategori, harga, dan rating.
+* **Cart & Checkout Simulation:** Sistem keranjang belanja dinamis dengan perhitungan subtotal dan diskon.
+* **Dark / Light Theme:** Dukungan penuh untuk mode gelap dan terang demi kenyamanan membaca.
+
+## 5. Tantangan & Pembelajaran
+Tantangan utama pada proyek ini adalah menjaga performa pemuatan gambar produk agar tidak memicu *Cumulative Layout Shift (CLS)*. Masalah ini diselesaikan dengan memanfaatkan komponen `<Image>` bawaan Next.js beserta penentuan rasio aspek yang presisi.
