@@ -1,0 +1,48 @@
+---
+title: "Ruang PRD — AI Product Workshop"
+summary: "Platform AI Product Workshop interaktif untuk menyusun Product Requirement Document (PRD) yang terstruktur dan komprehensif melalui percakapan discovery cerdas."
+category: "AI & Fullstack"
+year: 2026
+role: "Fullstack & AI Developer"
+technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Lucide React", "AI SDK / LLM", "Markdown"]
+---
+
+# Ruang PRD — AI Product Workshop
+
+## 1. Ringkasan Proyek
+**Ruang PRD** adalah platform berbasis AI yang dirancang sebagai *workspace* interaktif untuk membantu *Product Manager*, *Software Engineer*, dan *Founder* merumuskan ide produk menjadi dokumen kebutuhan (*Product Requirement Document* / PRD) yang tajam, terstruktur, dan siap dieksekusi.
+
+Dengan memadukan dialog discovery interaktif bersama AI dan preview dokumen secara *real-time*, pengguna dapat menguraikan visi produk mereka dengan mudah serta mengekspor dokumen final dalam format Markdown (.md).
+
+---
+
+## 2. Latar Belakang & Masalah
+Menyusun PRD yang komprehensif sering kali memakan banyak waktu dan menghadapi berbagai tantangan:
+- **Kekurangan Struktur:** Ide produk sering kali masih abstrak dan belum mencakup aspek teknis, user persona, atau batasan sistem secara runtut.
+- **Proses Manual yang Berulang:** Menulis PRD dari nol membutuhkan format standar yang memakan waktu untuk dirangkai ulang di setiap inisiatif produk.
+- **Kesenjangan Komunikasi:** Sulit menghubungkan kebutuhan bisnis dengan spesifikasi teknis yang jelas bagi tim pengembang.
+
+---
+
+## 3. Solusi & Pendekatan
+Ruang PRD menghadirkan arsitektur *dual-panel workspace*:
+1. **Discovery Panel (Sisi Kiri):** Antarmuka percakapan interaktif di mana AI bertindak sebagai konsultan produk yang mengajukan pertanyaan kunci terkait masalah, pengguna target, fitur utama, dan arsitektur sistem. Pengguna juga dapat melampirkan berkas (.pdf, .txt, .md, gambar) sebagai referensi awal.
+2. **Document Preview Panel (Sisi Kanan):** Dokumen PRD tersusun secara modular dan terstruktur (Overview & Objective, User & Pain Points, Functional Requirements, Security & Architecture) yang dapat langsung disunting (*inline editing*), disalin ke clipboard, atau diunduh sebagai file `.md`.
+
+---
+
+## 4. Fitur Utama
+* **Interactive AI Discovery Chat:** Dialog cerdas dua arah yang memandu perumusan ide produk secara mendalam melalui *prompting* kontekstual.
+* **Context & Document Attachment:** Dukungan pengunggahan berkas referensi (dokumen teks, PDF, gambar) untuk memperkaya analisis AI.
+* **Instant PRD Generator:** Transformasi ringkasan diskusi menjadi draft PRD lengkap dan terstandarisasi dalam satu klik.
+* **Live Markdown Document Viewer & Editor:** Preview dokumen kerja yang dinamis lengkap dengan kemampuan menyalin teks dan mengunduh format `.md`.
+* **Clean & Responsive Workshop UI:** Tampilan modern, minimalis, dan responsif dengan pengalaman pengguna yang mulus pada layar desktop maupun perangkat seluler.
+
+---
+
+## 5. Teknologi yang Digunakan
+- **Frontend & Framework:** Next.js (App Router), React, TypeScript
+- **Styling & Icons:** Tailwind CSS, Lucide React
+- **AI & Integrasi Model:** LLM Integration / AI SDK untuk reasoning & text generation
+- **Content Rendering:** Markdown Parser & Highlighting
+- **Deployment:** Vercel
