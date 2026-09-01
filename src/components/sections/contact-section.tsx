@@ -1,35 +1,30 @@
 "use client";
 
 import React, { useState } from "react";
-import { Mail, Send, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
-import { GithubIcon, LinkedinIcon } from "@/components/ui/social-icons";
-import { profileData } from "@/data/profile";
 import { contactFormSchema, ContactFormData } from "@/lib/validations";
-import { SectionHeading } from "@/components/ui/section-heading";
-import { Container } from "@/components/ui/container";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { profileData } from "@/data/profile";
 
 export function ContactSection() {
   const [formData, setFormData] = useState<ContactFormData>({
     name: "",
     email: "",
-    subject: "",
+    subject: "Halo dari Terminal Portofolio",
     message: "",
     honeypot: "",
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof ContactFormData, string>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
-  const [statusMessage, setStatusMessage] = useState("");
+  const [statusMessage, setStatusMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    // Clear error on change
     if (errors[name as keyof ContactFormData]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
@@ -37,10 +32,9 @@ export function ContactSection() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitStatus("idle");
+    setStatusMessage(null);
     setErrors({});
 
-    // Client-side Zod validation
     const result = contactFormSchema.safeParse(formData);
     if (!result.success) {
       const fieldErrors: Partial<Record<keyof ContactFormData, string>> = {};
@@ -65,255 +59,187 @@ export function ContactSection() {
       const data = await response.json();
 
       if (response.ok) {
-        setSubmitStatus("success");
-        setStatusMessage(data.message || "Pesan Anda berhasil terkirim!");
-        setFormData({ name: "", email: "", subject: "", message: "", honeypot: "" });
+        setStatusMessage({
+          type: "success",
+          text: data.message || `Pesan berhasil dikirim ke ${profileData.email}. Terima kasih!`,
+        });
+        setFormData({
+          name: "",
+          email: "",
+          subject: "Halo dari Terminal Portofolio",
+          message: "",
+          honeypot: "",
+        });
       } else {
-        setSubmitStatus("error");
-        setStatusMessage(data.error || "Gagal mengirim pesan. Silakan coba lagi.");
+        setStatusMessage({
+          type: "error",
+          text: data.error || "Gagal mengirim pesan. Silakan coba lagi.",
+        });
       }
     } catch {
-      setSubmitStatus("error");
-      setStatusMessage("Terjadi kesalahan jaringan. Silakan coba lagi nanti.");
+      setStatusMessage({
+        type: "error",
+        text: "Terjadi kesalahan koneksi jaringan. Silakan coba lagi nanti.",
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <section id="contact" className="py-20 bg-neutral-50/50 dark:bg-neutral-950/50">
-      <Container>
-        <SectionHeading
-          badge="Hubungi Saya"
-          title="Mari Berdiskusi &amp; Berkolaborasi"
-          subtitle="Punya ide proyek, penawaran kerja, atau ingin berdiskusi? Kirim pesan secara langsung melalui formulir di bawah ini."
+    <section id="contact" className="flex flex-col gap-2 pt-4 border-t border-[var(--terminal-border)]">
+      {/* Command prompt */}
+      <div className="flex items-baseline flex-wrap gap-0 text-sm font-medium">
+        <span className="text-[var(--terminal-accent)] font-semibold">arif</span>
+        <span className="text-[var(--terminal-text-dim)]">@</span>
+        <span className="text-[var(--terminal-blue)]">portfolio</span>
+        <span className="text-[var(--terminal-amber)] font-bold mr-2 ml-0.5">$</span>
+        <span className="text-[var(--terminal-text-bright)]">./contact</span>
+        <span className="ml-1 text-[var(--terminal-amber)]">--interactive</span>
+      </div>
+
+      <div className="text-xs text-[var(--terminal-text-dim)] pt-1">
+        Starting interactive contact prompt...
+      </div>
+      <div className="text-xs text-[var(--terminal-accent)] font-medium">
+        ? Isi form di bawah ini untuk mengirim pesan langsung
+      </div>
+
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3 pt-2 max-w-xl">
+        <input
+          type="text"
+          name="honeypot"
+          value={formData.honeypot}
+          onChange={handleChange}
+          tabIndex={-1}
+          autoComplete="off"
+          className="hidden"
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start max-w-5xl mx-auto">
-          {/* Direct Contact Info Sidebar */}
-          <div className="lg:col-span-5 space-y-6">
-            <Card className="space-y-6">
-              <h3 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">
-                Informasi Kontak
-              </h3>
-
-              <div className="space-y-4 text-sm">
-                <a
-                  href={`mailto:${profileData.email}`}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors group"
-                >
-                  <div className="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                    <Mail className="w-5 h-5" />
-                  </div>
-                  <div className="overflow-hidden">
-                    <span className="text-xs text-neutral-500 dark:text-neutral-400 block">Email</span>
-                    <span className="font-medium text-neutral-900 dark:text-neutral-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors truncate block">
-                      {profileData.email}
-                    </span>
-                  </div>
-                </a>
-
-                {profileData.socialLinks.github && (
-                  <a
-                    href={profileData.socialLinks.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors group"
-                  >
-                    <div className="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                      <GithubIcon className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <span className="text-xs text-neutral-500 dark:text-neutral-400 block">GitHub</span>
-                      <span className="font-medium text-neutral-900 dark:text-neutral-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                        ariffaishal1
-                      </span>
-                    </div>
-                  </a>
-                )}
-
-                {profileData.socialLinks.linkedin && (
-                  <a
-                    href={profileData.socialLinks.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors group"
-                  >
-                    <div className="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                      <LinkedinIcon className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <span className="text-xs text-neutral-500 dark:text-neutral-400 block">LinkedIn</span>
-                      <span className="font-medium text-neutral-900 dark:text-neutral-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                        arif-faishal-nugraha
-                      </span>
-                    </div>
-                  </a>
-                )}
-              </div>
-            </Card>
-          </div>
-
-          {/* Contact Form */}
-          <div className="lg:col-span-7">
-            <Card hoverEffect={false} className="p-6 sm:p-8">
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Honeypot anti-spam field */}
-                <input
-                  type="text"
-                  name="honeypot"
-                  value={formData.honeypot}
-                  onChange={handleChange}
-                  tabIndex={-1}
-                  autoComplete="off"
-                  className="hidden"
-                />
-
-                {/* Status Alert Banner */}
-                {submitStatus === "success" && (
-                  <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-sm flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
-                    <span>{statusMessage}</span>
-                  </div>
-                )}
-
-                {submitStatus === "error" && (
-                  <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/70 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200 text-sm flex items-start gap-3">
-                    <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
-                    <span>{statusMessage}</span>
-                  </div>
-                )}
-
-                {/* Grid Input Nama & Email */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor="name"
-                      className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1"
-                    >
-                      Nama Lengkap *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      placeholder="Masukkan nama Anda"
-                      className={`w-full px-3.5 py-2.5 rounded-xl border text-sm bg-neutral-50 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
-                        errors.name
-                          ? "border-red-500 focus:ring-red-500"
-                          : "border-neutral-300 dark:border-neutral-700"
-                      }`}
-                    />
-                    {errors.name && (
-                      <p className="text-xs text-red-500 mt-1">{errors.name}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1"
-                    >
-                      Email *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="nama@email.com"
-                      className={`w-full px-3.5 py-2.5 rounded-xl border text-sm bg-neutral-50 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
-                        errors.email
-                          ? "border-red-500 focus:ring-red-500"
-                          : "border-neutral-300 dark:border-neutral-700"
-                      }`}
-                    />
-                    {errors.email && (
-                      <p className="text-xs text-red-500 mt-1">{errors.email}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Subjek */}
-                <div>
-                  <label
-                    htmlFor="subject"
-                    className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1"
-                  >
-                    Subjek *
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    placeholder="Judul atau topik pesan"
-                    className={`w-full px-3.5 py-2.5 rounded-xl border text-sm bg-neutral-50 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
-                      errors.subject
-                        ? "border-red-500 focus:ring-red-500"
-                        : "border-neutral-300 dark:border-neutral-700"
-                    }`}
-                  />
-                  {errors.subject && (
-                    <p className="text-xs text-red-500 mt-1">{errors.subject}</p>
-                  )}
-                </div>
-
-                {/* Pesan */}
-                <div>
-                  <label
-                    htmlFor="message"
-                    className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1"
-                  >
-                    Pesan *
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={5}
-                    value={formData.message}
-                    onChange={handleChange}
-                    placeholder="Tuliskan detail pesan Anda di sini..."
-                    className={`w-full px-3.5 py-2.5 rounded-xl border text-sm bg-neutral-50 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
-                      errors.message
-                        ? "border-red-500 focus:ring-red-500"
-                        : "border-neutral-300 dark:border-neutral-700"
-                    }`}
-                  />
-                  {errors.message && (
-                    <p className="text-xs text-red-500 mt-1">{errors.message}</p>
-                  )}
-                </div>
-
-                {/* Submit Button */}
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  size="lg"
-                  variant="primary"
-                  className="w-full"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      Mengirim Pesan...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4" />
-                      Kirim Pesan
-                    </>
-                  )}
-                </Button>
-              </form>
-            </Card>
+        {/* Nama Input */}
+        <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
+          <label htmlFor="cf-name" className="text-xs font-semibold text-[var(--terminal-amber)] sm:w-20 shrink-0">
+            nama:
+          </label>
+          <div className="flex-1 flex flex-col">
+            <input
+              id="cf-name"
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Nama lengkap"
+              required
+              className="bg-transparent border-0 border-b border-[var(--terminal-border)] text-xs sm:text-[13px] text-[var(--terminal-text-bright)] py-1 focus:outline-none focus:border-[var(--terminal-accent)] transition-colors placeholder:text-[var(--terminal-text-dim)] placeholder:italic"
+            />
+            {errors.name && <span className="text-[11px] text-[var(--terminal-rose)] mt-0.5">{errors.name}</span>}
           </div>
         </div>
-      </Container>
+
+        {/* Email Input */}
+        <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
+          <label htmlFor="cf-email" className="text-xs font-semibold text-[var(--terminal-amber)] sm:w-20 shrink-0">
+            email:
+          </label>
+          <div className="flex-1 flex flex-col">
+            <input
+              id="cf-email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="nama@example.com"
+              required
+              className="bg-transparent border-0 border-b border-[var(--terminal-border)] text-xs sm:text-[13px] text-[var(--terminal-text-bright)] py-1 focus:outline-none focus:border-[var(--terminal-accent)] transition-colors placeholder:text-[var(--terminal-text-dim)] placeholder:italic"
+            />
+            {errors.email && <span className="text-[11px] text-[var(--terminal-rose)] mt-0.5">{errors.email}</span>}
+          </div>
+        </div>
+
+        {/* Pesan Input */}
+        <div className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-3">
+          <label htmlFor="cf-message" className="text-xs font-semibold text-[var(--terminal-amber)] sm:w-20 shrink-0 pt-1">
+            pesan:
+          </label>
+          <div className="flex-1 flex flex-col">
+            <textarea
+              id="cf-message"
+              name="message"
+              rows={3}
+              value={formData.message}
+              onChange={handleChange}
+              placeholder="Tulis pesan Anda di sini..."
+              required
+              className="bg-transparent border border-[var(--terminal-border)] rounded p-2 text-xs sm:text-[13px] text-[var(--terminal-text-bright)] focus:outline-none focus:border-[var(--terminal-accent)] transition-colors placeholder:text-[var(--terminal-text-dim)] placeholder:italic resize-y"
+            />
+            {errors.message && <span className="text-[11px] text-[var(--terminal-rose)] mt-0.5">{errors.message}</span>}
+          </div>
+        </div>
+
+        {/* Submit button */}
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="self-start mt-2 bg-[var(--terminal-accent)] text-[var(--terminal-bg)] font-bold text-xs px-4 py-2 rounded hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
+        >
+          {isSubmitting ? "⏳ sending..." : "$ send --submit"}
+        </button>
+
+        {/* Status Message Display */}
+        {statusMessage && (
+          <div
+            className={`text-xs p-2.5 rounded border mt-2 ${
+              statusMessage.type === "success"
+                ? "bg-[var(--terminal-accent-dim)] border-[var(--terminal-accent)] text-[var(--terminal-green)]"
+                : "bg-red-500/10 border-[var(--terminal-rose)] text-[var(--terminal-rose)]"
+            }`}
+          >
+            {statusMessage.type === "success" ? "✓ " : "✗ "}
+            {statusMessage.text}
+          </div>
+        )}
+      </form>
+
+      {/* Social Links Direct */}
+      <div className="flex flex-wrap items-center gap-3 text-xs pt-4 text-[var(--terminal-text-dim)]">
+        <span>Atau hubungi langsung →</span>
+        {profileData.socialLinks.github && (
+          <a
+            href={profileData.socialLinks.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[var(--terminal-blue)] hover:text-[var(--terminal-accent)] transition-colors"
+          >
+            github
+          </a>
+        )}
+        {profileData.socialLinks.linkedin && (
+          <a
+            href={profileData.socialLinks.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[var(--terminal-blue)] hover:text-[var(--terminal-accent)] transition-colors"
+          >
+            linkedin
+          </a>
+        )}
+        <a
+          href={`mailto:${profileData.email}`}
+          className="text-[var(--terminal-blue)] hover:text-[var(--terminal-accent)] transition-colors"
+        >
+          email
+        </a>
+      </div>
+
+      {/* Trailing active prompt cursor */}
+      <div className="flex items-baseline gap-0 text-sm font-medium pt-6 pb-2">
+        <span className="text-[var(--terminal-accent)] font-semibold">arif</span>
+        <span className="text-[var(--terminal-text-dim)]">@</span>
+        <span className="text-[var(--terminal-blue)]">portfolio</span>
+        <span className="text-[var(--terminal-amber)] font-bold mr-2 ml-0.5">$</span>
+        <span className="terminal-cursor" />
+      </div>
     </section>
   );
 }

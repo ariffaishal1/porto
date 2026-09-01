@@ -2,15 +2,9 @@ import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { ArrowLeft, ExternalLink, Calendar, Briefcase } from "lucide-react";
-import { GithubIcon } from "@/components/ui/social-icons";
 import { getProjectBySlug, getAllProjectSlugs } from "@/lib/mdx";
 import { projectsData } from "@/data/projects";
 import { generateBaseMetadata } from "@/lib/metadata";
-import { Container } from "@/components/ui/container";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -46,105 +40,106 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  // Cross-reference with structured project data for URLs
   const projectData = projectsData.find((p) => p.slug === slug);
 
   return (
-    <div className="pt-28 pb-20">
-      <Container>
-        {/* Back Link Navigation */}
-        <div className="mb-8">
-          <Link
-            href="/#projects"
-            className="inline-flex items-center gap-2 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Kembali ke Daftar Proyek
-          </Link>
-        </div>
+    <div className="flex flex-col gap-4">
+      {/* Command prompt nav */}
+      <div className="flex items-baseline flex-wrap gap-0 text-sm font-medium">
+        <span className="text-[var(--terminal-accent)] font-semibold">arif</span>
+        <span className="text-[var(--terminal-text-dim)]">@</span>
+        <span className="text-[var(--terminal-blue)]">portfolio</span>
+        <span className="text-[var(--terminal-amber)] font-bold mr-2 ml-0.5">$</span>
+        <span className="text-[var(--terminal-text-bright)]">cat</span>
+        <span className="ml-1 text-[var(--terminal-green)]">~/projects/{slug}/README.md</span>
+      </div>
 
-        {/* Article Container */}
-        <article className="max-w-4xl mx-auto space-y-10">
-          {/* Header Section */}
-          <div className="space-y-4 border-b border-neutral-200 dark:border-neutral-800 pb-8">
-            <div className="flex flex-wrap items-center gap-3">
-              <Badge variant="emerald">{projectMdx.meta.category}</Badge>
-              <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400 flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5" /> {projectMdx.meta.year}
-              </span>
-            </div>
+      <div className="mb-2">
+        <Link
+          href="/#projects"
+          className="text-xs text-[var(--terminal-blue)] hover:text-[var(--terminal-accent)] transition-colors"
+        >
+          ← cd .. (Kembali ke Daftar Proyek)
+        </Link>
+      </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-neutral-900 dark:text-neutral-50 tracking-tight leading-tight">
+      <article className="flex flex-col gap-6">
+        {/* Header Metadata */}
+        <div className="bg-[var(--terminal-bg-panel)] border border-[var(--terminal-border)] rounded-md p-4 flex flex-col gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h1 className="text-base sm:text-lg font-bold text-[var(--terminal-accent)]">
               {projectMdx.meta.title}
             </h1>
-
-            <p className="text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed">
-              {projectMdx.meta.summary}
-            </p>
+            <span className="text-xs bg-[var(--terminal-accent-dim)] text-[var(--terminal-accent)] px-2 py-0.5 rounded font-medium">
+              {projectMdx.meta.category} · {projectMdx.meta.year}
+            </span>
           </div>
 
-          {/* Quick Info Sidebar Grid */}
-          <Card hoverEffect={false} className="bg-neutral-50/80 dark:bg-neutral-900/60 p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-sm">
+          <p className="text-xs sm:text-[13px] text-[var(--terminal-text)] leading-relaxed">
+            {projectMdx.meta.summary}
+          </p>
+
+          <div className="flex flex-wrap gap-4 text-xs pt-2 border-t border-[var(--terminal-border)]/50">
+            {projectMdx.meta.role && (
               <div>
-                <span className="text-xs text-neutral-500 dark:text-neutral-400 block font-medium">
-                  Peran Pemilik
-                </span>
-                <span className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5 mt-1">
-                  <Briefcase className="w-4 h-4 text-emerald-500" />
+                <span className="text-[var(--terminal-text-dim)]">Peran:</span>{" "}
+                <span className="text-[var(--terminal-text-bright)] font-medium">
                   {projectMdx.meta.role}
                 </span>
               </div>
-
-              <div>
-                <span className="text-xs text-neutral-500 dark:text-neutral-400 block font-medium">
-                  Tahun Proyek
-                </span>
-                <span className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5 mt-1">
-                  <Calendar className="w-4 h-4 text-emerald-500" />
-                  {projectMdx.meta.year}
-                </span>
-              </div>
-
-              <div className="sm:col-span-2">
-                <span className="text-xs text-neutral-500 dark:text-neutral-400 block font-medium mb-1.5">
-                  Teknologi Utama
-                </span>
-                <div className="flex flex-wrap gap-1.5">
-                  {projectMdx.meta.technologies.map((tech) => (
-                    <Badge key={tech} variant="subtle">
-                      {tech}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Link Action Buttons */}
-            {(projectData?.demoUrl || projectData?.repositoryUrl) && (
-              <div className="pt-6 mt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-wrap gap-3">
-                {projectData.demoUrl && (
-                  <Button href={projectData.demoUrl} external variant="primary" size="sm">
-                    <ExternalLink className="w-4 h-4" />
-                    Kunjungi Live Demo
-                  </Button>
-                )}
-                {projectData.repositoryUrl && (
-                  <Button href={projectData.repositoryUrl} external variant="outline" size="sm">
-                    <GithubIcon className="w-4 h-4" />
-                    Source Code GitHub
-                  </Button>
-                )}
-              </div>
             )}
-          </Card>
-
-          {/* MDX Rendered Body Content */}
-          <div className="prose prose-neutral dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-emerald-600 dark:prose-a:text-emerald-400 prose-img:rounded-2xl">
-            <MDXRemote source={projectMdx.content} />
+            <div>
+              <span className="text-[var(--terminal-text-dim)]">Tahun:</span>{" "}
+              <span className="text-[var(--terminal-text-bright)] font-medium">
+                {projectMdx.meta.year}
+              </span>
+            </div>
           </div>
-        </article>
-      </Container>
+
+          {/* Tech stack */}
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            {projectMdx.meta.technologies.map((tech) => (
+              <span
+                key={tech}
+                className="bg-[var(--terminal-bg-selection)] text-[var(--terminal-purple)] px-2 py-0.5 rounded text-[11px] font-medium"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+
+          {/* Action Links */}
+          {(projectData?.demoUrl || projectData?.repositoryUrl) && (
+            <div className="flex flex-wrap items-center gap-4 text-xs pt-2 border-t border-[var(--terminal-border)]/50">
+              {projectData.demoUrl && (
+                <a
+                  href={projectData.demoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[var(--terminal-blue)] hover:text-[var(--terminal-accent)] font-medium transition-colors"
+                >
+                  → Kunjungi Live Demo
+                </a>
+              )}
+              {projectData?.repositoryUrl && (
+                <a
+                  href={projectData.repositoryUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[var(--terminal-blue)] hover:text-[var(--terminal-accent)] font-medium transition-colors"
+                >
+                  → Source Code GitHub
+                </a>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* MDX Body in Terminal Prose */}
+        <div className="project-prose border-t border-[var(--terminal-border)] pt-4">
+          <MDXRemote source={projectMdx.content} />
+        </div>
+      </article>
     </div>
   );
 }

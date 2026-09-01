@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import "@/app/globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Navbar } from "@/components/layout/navbar";
@@ -7,9 +7,9 @@ import { Footer } from "@/components/layout/footer";
 import { generateBaseMetadata } from "@/lib/metadata";
 import { profileData } from "@/data/profile";
 
-const inter = Inter({
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-mono",
   display: "swap",
 });
 
@@ -42,7 +42,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="id" suppressHydrationWarning className="scroll-smooth">
+    <html lang="id" suppressHydrationWarning className="scroll-smooth dark">
       <head>
         <script
           type="application/ld+json"
@@ -50,17 +50,19 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} font-sans antialiased bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-50 selection:bg-emerald-500 selection:text-white transition-colors duration-300 min-h-screen flex flex-col`}
+        className={`${jetbrainsMono.variable} font-mono antialiased min-h-screen flex flex-col bg-[var(--terminal-bg)] text-[var(--terminal-text)]`}
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
-          <main className="flex-grow">{children}</main>
-          <Footer />
+          <div className="max-w-[960px] w-full mx-auto min-h-screen flex flex-col border-x border-[var(--terminal-border)] shadow-2xl">
+            <Navbar />
+            <main className="flex-grow px-4 sm:px-6 py-6 pb-28 flex flex-col gap-8">{children}</main>
+            <Footer />
+          </div>
         </ThemeProvider>
       </body>
     </html>

@@ -1,131 +1,122 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
-import { ExternalLink, ArrowRight } from "lucide-react";
-import { GithubIcon } from "@/components/ui/social-icons";
 import { projectsData } from "@/data/projects";
-import { SectionHeading } from "@/components/ui/section-heading";
-import { Container } from "@/components/ui/container";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 
 export function ProjectsSection() {
-  const [selectedCategory, setSelectedCategory] = useState("Semua");
-
-  // Extract unique categories
-  const categories = ["Semua", ...Array.from(new Set(projectsData.map((p) => p.category)))];
-
-  // Filter projects by selected category and prioritize featured projects
-  const filteredProjects = projectsData
-    .filter((project) => selectedCategory === "Semua" || project.category === selectedCategory)
-    .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
-
   return (
-    <section id="projects" className="py-20 bg-neutral-50/50 dark:bg-neutral-950/50">
-      <Container>
-        <SectionHeading
-          badge="Portofolio Proyek"
-          title="Karya &amp; Studi Kasus Unggulan"
-          subtitle="Daftar proyek pilihan yang menampilkan solusi perangkat lunak, teknologi yang digunakan, serta peran saya."
-        />
+    <section id="projects" className="flex flex-col gap-2 pt-4 border-t border-[var(--terminal-border)]">
+      {/* Command prompt */}
+      <div className="flex items-baseline flex-wrap gap-0 text-sm font-medium">
+        <span className="text-[var(--terminal-accent)] font-semibold">arif</span>
+        <span className="text-[var(--terminal-text-dim)]">@</span>
+        <span className="text-[var(--terminal-blue)]">portfolio</span>
+        <span className="text-[var(--terminal-amber)] font-bold mr-2 ml-0.5">$</span>
+        <span className="text-[var(--terminal-text-bright)]">ls</span>
+        <span className="ml-1 text-[var(--terminal-amber)]">-la</span>
+        <span className="ml-1 text-[var(--terminal-green)]">~/projects/</span>
+      </div>
 
-        {/* Category Filter Tabs */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 text-xs font-semibold rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
-                selectedCategory === category
-                  ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/20 dark:bg-emerald-500 dark:text-neutral-950"
-                  : "bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
+      <div className="text-xs text-[var(--terminal-text-dim)] border-b border-[var(--terminal-border)]/60 pb-1 pt-1 select-none">
+        total {projectsData.length} &nbsp;&nbsp;drwxr-xr-x arif staff
+      </div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project) => (
-            <Card key={project.slug} className="flex flex-col justify-between h-full p-6 space-y-6">
-              <div className="space-y-4">
-                {/* Header Meta: Category & Year & Featured Badge */}
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <Badge variant="emerald">{project.category}</Badge>
-                    {project.featured && (
-                      <span className="text-[10px] font-bold tracking-wide uppercase px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/40">
-                        Unggulan
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                    {project.year}
+      {/* Projects List */}
+      <div className="flex flex-col gap-6 pt-2">
+        {projectsData.map((project) => (
+          <div key={project.slug} className="flex flex-col gap-2">
+            {/* ls entry line */}
+            <div className="flex items-baseline gap-3 text-xs">
+              <span className="text-[var(--terminal-text-dim)] select-none">drwxr-xr-x</span>
+              <span className="text-[var(--terminal-text-dim)] select-none">2.4MB</span>
+              <span className="text-[var(--terminal-text-dim)] select-none">{project.year}</span>
+              <Link
+                href={`/projects/${project.slug}`}
+                className="text-[var(--terminal-cyan)] font-semibold hover:underline"
+              >
+                {project.slug}/
+              </Link>
+            </div>
+
+            {/* Project Content in Pure CLI Tree Layout */}
+            <div className="pl-4 sm:pl-6 border-l-2 border-[var(--terminal-border)] flex flex-col gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <Link
+                  href={`/projects/${project.slug}`}
+                  className="text-[var(--terminal-accent)] font-bold text-sm sm:text-base hover:underline"
+                >
+                  {project.title}
+                </Link>
+                {project.featured && (
+                  <span className="text-[10px] text-[var(--terminal-amber)] border border-[var(--terminal-amber)]/40 px-1.5 py-0.2 rounded">
+                    ★ featured
                   </span>
-                </div>
+                )}
+              </div>
 
-                {/* Title & Summary */}
+              <p className="text-xs sm:text-[13px] text-[var(--terminal-text)] leading-relaxed">
+                {project.summary}
+              </p>
+
+              <div className="flex flex-wrap items-center gap-3 text-xs pt-0.5">
+                {project.role && (
+                  <div>
+                    <span className="text-[var(--terminal-text-dim)]">role:</span>{" "}
+                    <span className="text-[var(--terminal-accent)]">{project.role}</span>
+                  </div>
+                )}
                 <div>
-                  <h3 className="text-xl font-bold text-neutral-900 dark:text-neutral-50 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
-                    <Link href={`/projects/${project.slug}`}>{project.title}</Link>
-                  </h3>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-2 line-clamp-3 leading-relaxed">
-                    {project.summary}
-                  </p>
-                </div>
-
-                {/* Technologies List */}
-                <div className="flex flex-wrap gap-1.5 pt-2">
-                  {project.technologies.map((tech) => (
-                    <Badge key={tech} variant="subtle">
-                      {tech}
-                    </Badge>
-                  ))}
+                  <span className="text-[var(--terminal-text-dim)]">category:</span>{" "}
+                  <span className="text-[var(--terminal-purple)]">{project.category}</span>
                 </div>
               </div>
 
-              {/* Action Buttons Footer */}
-              <div className="pt-4 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-between gap-2">
-                <Button href={`/projects/${project.slug}`} size="sm" variant="primary">
-                  Detail &amp; Studi Kasus
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Button>
-
-                <div className="flex items-center gap-1">
-                  {project.demoUrl && (
-                    <a
-                      href={project.demoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`Live Demo ${project.title}`}
-                      title="Live Demo"
-                      className="p-2 rounded-lg text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  )}
-                  {project.repositoryUrl && (
-                    <a
-                      href={project.repositoryUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`Repository GitHub ${project.title}`}
-                      title="Source Code"
-                      className="p-2 rounded-lg text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                    >
-                      <GithubIcon className="w-4 h-4" />
-                    </a>
-                  )}
-                </div>
+              {/* Technologies */}
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {project.technologies.map((tech) => (
+                  <span
+                    key={tech}
+                    className="bg-[var(--terminal-bg-selection)] text-[var(--terminal-text-bright)] px-2 py-0.5 rounded text-[11px] font-mono"
+                  >
+                    #{tech}
+                  </span>
+                ))}
               </div>
-            </Card>
-          ))}
-        </div>
-      </Container>
+
+              {/* Action Links */}
+              <div className="flex flex-wrap items-center gap-4 text-xs pt-1.5">
+                <Link
+                  href={`/projects/${project.slug}`}
+                  className="text-[var(--terminal-blue)] hover:text-[var(--terminal-accent)] font-medium transition-colors"
+                >
+                  → Catatan Lengkap (Case Study)
+                </Link>
+                {project.demoUrl && (
+                  <a
+                    href={project.demoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[var(--terminal-blue)] hover:text-[var(--terminal-accent)] font-medium transition-colors"
+                  >
+                    → Live Demo
+                  </a>
+                )}
+                {project.repositoryUrl && (
+                  <a
+                    href={project.repositoryUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[var(--terminal-blue)] hover:text-[var(--terminal-accent)] font-medium transition-colors"
+                  >
+                    → Source Code
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }

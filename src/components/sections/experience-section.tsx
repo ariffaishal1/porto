@@ -1,92 +1,104 @@
 import React from "react";
 import { experienceData } from "@/data/experience";
-import { SectionHeading } from "@/components/ui/section-heading";
-import { Container } from "@/components/ui/container";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Briefcase, Calendar, MapPin, CheckCircle2 } from "lucide-react";
 
 export function ExperienceSection() {
+  const commitHashes = ["a3f7c9e", "8b2d1f4", "5c9e4a1", "1d8b7e2"];
+
   return (
-    <section id="experience" className="py-20">
-      <Container>
-        <SectionHeading
-          badge="Pengalaman Kerja"
-          title="Jejak Karir & Proyek"
-          subtitle="Riwayat aktivitas profesional, kontribusi tim, dan pencapaian teknis."
-        />
+    <section id="experience" className="flex flex-col gap-2 pt-4 border-t border-[var(--terminal-border)]">
+      {/* Command prompt */}
+      <div className="flex items-baseline flex-wrap gap-0 text-sm font-medium">
+        <span className="text-[var(--terminal-accent)] font-semibold">arif</span>
+        <span className="text-[var(--terminal-text-dim)]">@</span>
+        <span className="text-[var(--terminal-blue)]">portfolio</span>
+        <span className="text-[var(--terminal-amber)] font-bold mr-2 ml-0.5">$</span>
+        <span className="text-[var(--terminal-text-bright)]">git</span>
+        <span className="ml-1 text-[var(--terminal-text-bright)]">log</span>
+        <span className="ml-1 text-[var(--terminal-amber)]">--pretty=full</span>
+        <span className="ml-1 text-[var(--terminal-green)]">career</span>
+      </div>
 
-        <div className="max-w-3xl mx-auto relative pl-6 sm:pl-8 border-l-2 border-neutral-200 dark:border-neutral-800 space-y-10">
-          {experienceData.map((exp, index) => (
-            <div key={index} className="relative group">
-              {/* Timeline Dot Indicator */}
-              <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full border-2 border-emerald-500 bg-white dark:bg-neutral-950 group-hover:scale-125 transition-transform duration-200" />
+      {/* Git Log Entries */}
+      <div className="flex flex-col gap-6 pt-3">
+        {experienceData.map((exp, index) => {
+          const hash = commitHashes[index % commitHashes.length];
+          const isLatest = index === 0;
 
-              <Card className="space-y-4">
-                {/* Header: Role & Company */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-neutral-100 dark:border-neutral-800 pb-3">
-                  <div>
-                    <h3 className="text-lg font-bold text-neutral-900 dark:text-neutral-50 flex items-center gap-2">
-                      <Briefcase className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                      {exp.role}
-                    </h3>
-                    <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
-                      {exp.company}
-                    </p>
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-500 dark:text-neutral-400">
-                    <span className="inline-flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5" />
-                      {exp.startDate} - {exp.endDate}
-                    </span>
-                    {exp.location && (
-                      <span className="inline-flex items-center gap-1">
-                        <MapPin className="w-3.5 h-3.5" />
-                        {exp.location}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Description */}
-                <p className="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
-                  {exp.description}
-                </p>
-
-                {/* Key Achievements Bullet List */}
-                {exp.achievements && exp.achievements.length > 0 && (
-                  <div className="space-y-2">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                      Pencapaian Utama:
-                    </h4>
-                    <ul className="space-y-1.5">
-                      {exp.achievements.map((item, idx) => (
-                        <li
-                          key={idx}
-                          className="text-xs text-neutral-700 dark:text-neutral-300 flex items-start gap-2"
-                        >
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+          return (
+            <div
+              key={index}
+              className="flex flex-col gap-1.5 pb-5 border-b border-[var(--terminal-border)]/50 last:border-b-0"
+            >
+              {/* Commit Hash Line */}
+              <div className="flex items-baseline gap-2 text-xs">
+                <span className="text-[var(--terminal-amber)] font-bold">commit {hash}</span>
+                {isLatest && (
+                  <span className="text-[var(--terminal-text-dim)] text-[11px]">
+                    (<span className="text-[var(--terminal-accent)] font-semibold">HEAD</span>,{" "}
+                    <span className="text-[var(--terminal-green)]">origin/main</span>)
+                  </span>
                 )}
+              </div>
 
-                {/* Technologies Used */}
-                <div className="pt-2 flex flex-wrap gap-1.5">
-                  {exp.technologies.map((tech) => (
-                    <Badge key={tech} variant="subtle">
-                      {tech}
-                    </Badge>
-                  ))}
+              {/* Author Line */}
+              <div className="text-xs">
+                <span className="text-[var(--terminal-text-dim)]">Author:</span>{" "}
+                <span className="text-[var(--terminal-accent)] font-medium">
+                  Arif Faishal Nugraha
+                </span>{" "}
+                <span className="text-[var(--terminal-text-dim)]">&lt;ariffaishal1@gmail.com&gt;</span>
+              </div>
+
+              {/* Date Line */}
+              <div className="text-xs">
+                <span className="text-[var(--terminal-text-dim)]">Date:</span>{" "}
+                <span className="text-[var(--terminal-text-dim)]">
+                  {exp.startDate} — {exp.endDate}
+                </span>
+              </div>
+
+              {/* Message Line */}
+              <div className="text-[13px] font-bold text-[var(--terminal-text-bright)] mt-1">
+                {exp.role} @ {exp.company}
+              </div>
+
+              {exp.location && (
+                <div className="text-[11px] text-[var(--terminal-text-dim)]">
+                  {exp.location}
                 </div>
-              </Card>
+              )}
+
+              {/* Body */}
+              <div className="text-xs sm:text-[12.5px] text-[var(--terminal-text)] pl-3 border-l-2 border-[var(--terminal-border)] mt-2 flex flex-col gap-2">
+                <div>{exp.description}</div>
+
+                {exp.achievements && exp.achievements.length > 0 && (
+                  <ul className="flex flex-col gap-1 mt-1 list-none">
+                    {exp.achievements.map((item, idx) => (
+                      <li key={idx} className="flex items-start gap-1.5">
+                        <span className="text-[var(--terminal-green)] font-bold select-none">+</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              {/* Tags / Technologies */}
+              <div className="flex flex-wrap gap-1.5 mt-2.5">
+                {exp.technologies.map((tech) => (
+                  <span
+                    key={tech}
+                    className="bg-[var(--terminal-bg-selection)] text-[var(--terminal-purple)] px-2 py-0.5 rounded text-[11px] font-medium"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
             </div>
-          ))}
-        </div>
-      </Container>
+          );
+        })}
+      </div>
     </section>
   );
 }

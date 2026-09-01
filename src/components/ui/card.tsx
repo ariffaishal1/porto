@@ -15,9 +15,9 @@ export function Card({
   return (
     <div
       className={cn(
-        "bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 rounded-2xl p-6 shadow-sm overflow-hidden",
+        "bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-6 overflow-hidden",
         hoverEffect &&
-          "transition-all duration-300 hover:shadow-md hover:border-emerald-500/30 dark:hover:border-emerald-500/30 hover:-translate-y-0.5",
+          "transition-[transform,box-shadow,border-color] duration-200 hover:shadow-sm hover:border-emerald-500/30 dark:hover:border-emerald-500/30 hover:-translate-y-0.5",
         className
       )}
       {...props}

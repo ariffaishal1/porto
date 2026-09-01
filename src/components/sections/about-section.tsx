@@ -1,117 +1,88 @@
+"use client";
+
 import React from "react";
 import { profileData } from "@/data/profile";
-import { SectionHeading } from "@/components/ui/section-heading";
-import { Container } from "@/components/ui/container";
-import { Card } from "@/components/ui/card";
-import { MapPin, Code2, Rocket, HeartHandshake } from "lucide-react";
+import { AsciiBlackHole } from "@/components/ui/ascii-black-hole";
 
 export function AboutSection() {
   return (
-    <section id="about" className="py-20 bg-neutral-50/50 dark:bg-neutral-950/50">
-      <Container>
-        <SectionHeading
-          badge="Tentang Saya"
-          title="Mengenal Lebih Dekat"
-          subtitle="Ringkasan profil profesional, latar belakang pengembangan, dan nilai-nilai kerja saya."
-        />
+    <section id="about" className="flex flex-col gap-2 pt-4 border-t border-[var(--terminal-border)]">
+      {/* Command prompt */}
+      <div className="flex items-baseline flex-wrap gap-0 text-sm font-medium">
+        <span className="text-[var(--terminal-accent)] font-semibold">arif</span>
+        <span className="text-[var(--terminal-text-dim)]">@</span>
+        <span className="text-[var(--terminal-blue)]">portfolio</span>
+        <span className="text-[var(--terminal-amber)] font-bold mr-2 ml-0.5">$</span>
+        <span className="text-[var(--terminal-text-bright)]">neofetch</span>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Main Bio Content */}
-          <div className="lg:col-span-8 space-y-6">
-            <Card hoverEffect={false} className="space-y-4 leading-relaxed">
-              {profileData.fullBio.map((paragraph, index) => (
-                <p
-                  key={index}
-                  className="text-base text-neutral-700 dark:text-neutral-300"
-                >
-                  {paragraph}
-                </p>
-              ))}
-            </Card>
+      {/* Neofetch grid */}
+      <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6 items-start pt-2">
+        {/* Left: 3D Animated ASCII Black Hole (No border box / purely terminal text) */}
+        <div className="flex items-center justify-start min-w-[240px]">
+          <AsciiBlackHole />
+        </div>
 
-            {/* Core Values Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card className="space-y-2 p-5">
-                <Code2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-                <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 text-sm">
-                  Clean Code
-                </h3>
-                <p className="text-xs text-neutral-600 dark:text-neutral-400">
-                  Menulis kode yang rapi, terstruktur, serta mudah dipelihara oleh tim.
-                </p>
-              </Card>
-
-              <Card className="space-y-2 p-5">
-                <Rocket className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-                <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 text-sm">
-                  Performa Tinggi
-                </h3>
-                <p className="text-xs text-neutral-600 dark:text-neutral-400">
-                  Mengutamakan waktu muat yang cepat dan optimasi SEO terukur.
-                </p>
-              </Card>
-
-              <Card className="space-y-2 p-5">
-                <HeartHandshake className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-                <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 text-sm">
-                  Kolaboratif
-                </h3>
-                <p className="text-xs text-neutral-600 dark:text-neutral-400">
-                  Siap berkomunikasi secara transparan dan adaptif terhadap kebutuhan.
-                </p>
-              </Card>
-            </div>
+        {/* Right: Info Lines */}
+        <div className="flex flex-col gap-1 text-[13px] leading-relaxed">
+          <div className="text-[var(--terminal-accent)] font-bold text-sm">
+            arif@portfolio
+          </div>
+          <div className="text-[var(--terminal-text-dim)] -mt-0.5 mb-1 select-none">
+            ──────────────────────
           </div>
 
-          {/* Sidebar Info Summary */}
-          <div className="lg:col-span-4 space-y-4">
-            <Card className="space-y-4">
-              <h3 className="font-bold text-neutral-900 dark:text-neutral-100 text-base border-b border-neutral-200 dark:border-neutral-800 pb-3">
-                Informasi Ringkas
-              </h3>
+          <div>
+            <span className="text-[var(--terminal-accent)] font-semibold">Name:</span>{" "}
+            <span className="text-[var(--terminal-text-bright)]">{profileData.name}</span>
+          </div>
 
-              <div className="space-y-3 text-sm">
-                <div>
-                  <span className="text-xs text-neutral-500 dark:text-neutral-400 block font-medium">
-                    Nama Lengkap
-                  </span>
-                  <span className="text-neutral-900 dark:text-neutral-100 font-semibold">
-                    {profileData.name}
-                  </span>
-                </div>
+          <div>
+            <span className="text-[var(--terminal-accent)] font-semibold">Role:</span>{" "}
+            <span className="text-[var(--terminal-text)]">{profileData.role}</span>
+          </div>
 
-                <div>
-                  <span className="text-xs text-neutral-500 dark:text-neutral-400 block font-medium">
-                    Spesialisasi Utama
-                  </span>
-                  <span className="text-neutral-900 dark:text-neutral-100 font-semibold">
-                    {profileData.role}
-                  </span>
-                </div>
+          <div>
+            <span className="text-[var(--terminal-accent)] font-semibold">Location:</span>{" "}
+            <span className="text-[var(--terminal-text)]">{profileData.location}</span>
+          </div>
 
-                <div>
-                  <span className="text-xs text-neutral-500 dark:text-neutral-400 block font-medium">
-                    Lokasi
-                  </span>
-                  <span className="text-neutral-900 dark:text-neutral-100 font-medium inline-flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-emerald-500" />
-                    {profileData.location}
-                  </span>
-                </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[var(--terminal-accent)] font-semibold">Status:</span>{" "}
+            <span className="inline-flex items-center gap-1.5 text-[var(--terminal-green)]">
+              <span className="w-2 h-2 rounded-full bg-[var(--terminal-green)] status-pulse" />
+              {profileData.availability}
+            </span>
+          </div>
 
-                <div>
-                  <span className="text-xs text-neutral-500 dark:text-neutral-400 block font-medium">
-                    Status Ketersediaan
-                  </span>
-                  <span className="text-emerald-600 dark:text-emerald-400 font-medium">
-                    {profileData.availability}
-                  </span>
-                </div>
-              </div>
-            </Card>
+          <div>
+            <span className="text-[var(--terminal-accent)] font-semibold">Email:</span>{" "}
+            <a
+              href={`mailto:${profileData.email}`}
+              className="text-[var(--terminal-blue)] hover:underline"
+            >
+              {profileData.email}
+            </a>
+          </div>
+
+          <div className="mt-1">
+            <span className="text-[var(--terminal-accent)] font-semibold">Bio:</span>{" "}
+            <span className="text-[var(--terminal-text)]">{profileData.shortBio}</span>
+          </div>
+
+          {/* Color palette blocks */}
+          <div className="flex gap-1.5 mt-3">
+            <span className="w-6 h-3 rounded-sm bg-[#e06c75]" />
+            <span className="w-6 h-3 rounded-sm bg-[#f0c674]" />
+            <span className="w-6 h-3 rounded-sm bg-[#a3be8c]" />
+            <span className="w-6 h-3 rounded-sm bg-[#22d3a7]" />
+            <span className="w-6 h-3 rounded-sm bg-[#88c0d0]" />
+            <span className="w-6 h-3 rounded-sm bg-[#81a1c1]" />
+            <span className="w-6 h-3 rounded-sm bg-[#b48ead]" />
+            <span className="w-6 h-3 rounded-sm bg-[#c5cad3]" />
           </div>
         </div>
-      </Container>
+      </div>
     </section>
   );
 }
