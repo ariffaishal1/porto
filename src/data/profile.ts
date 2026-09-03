@@ -4,11 +4,12 @@ export const profileData: Profile = {
   name: "Arif Faishal Nugraha",
   shortName: "Arif",
   role: "Software Engineer",
-  headline: "Membangun aplikasi web & mobile modern yang responsif, cepat, dan terstruktur.",
-  shortBio: "Seorang Software Engineer yang berfokus pada pengembangan antarmuka pengguna (UI/UX), aplikasi web dan mobile, serta solusi perangkat lunak yang modern.",
+  headline: "Merancang dan membangun aplikasi Web, Mobile, & Desktop yang tangguh, cepat, serta terintegrasi dengan teknologi modern.",
+  shortBio: "Software Engineer dengan fokus pada aplikasi multiplatform (Web, Mobile, Desktop) dan integrasi AI. Menitikberatkan pada arsitektur kode yang bersih, performa tinggi, dan solusi yang bermanfaat nyata.",
   fullBio: [
-    "Saya adalah seorang Software Engineer yang memiliki passion dalam membangun aplikasi modern berbasis Web dan Mobile. Berfokus pada penulisan kode yang bersih, maintainable, serta pengalaman pengguna yang optimal.",
-    "Selalu antusias mempelajari teknologi baru seperti Next.js, React, TypeScript, Flutter, dan arsitektur cloud. Siap berkontribusi dalam tim profesional maupun mengerjakan proyek indie."
+    "Saya seorang Software Engineer yang berdedikasi membangun solusi perangkat lunak lintas platform — mulai dari aplikasi Web responsif, aplikasi Mobile yang intuitif, hingga integrasi model AI/LLM yang fungsional.",
+    "Fokus utama saya bertumpu pada ekosistem Next.js, React, TypeScript, Flutter, dan AI. Saya memprioritaskan kode yang bersih, modular, mudah dipelihara, serta pengalaman interaksi pengguna yang mulus.",
+    "Siap berkontribusi dalam tim rekayasa perangkat lunak profesional maupun berkolaborasi dalam membangun produk inovatif dari tahap perancangan hingga rilis."
   ],
   location: "Indonesia",
   availability: "Terbuka untuk Peluang Kerja & Freelance",

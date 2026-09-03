@@ -14,12 +14,13 @@ export const skillsData: Skill[] = [
   { name: "Node.js", category: "Backend", featured: true },
   { name: "Express.js", category: "Backend", featured: true },
   { name: "RESTful API", category: "Backend", featured: true },
-  { name: "PHP / Laravel", category: "Backend" },
+  //{ name: "PHP / Laravel", category: "Backend" },
 
   // Mobile
   { name: "Flutter", category: "Mobile", featured: true },
-  { name: "Dart", category: "Mobile", featured: true },
-  { name: "React Native", category: "Mobile" },
+  //{ name: "Dart", category: "Mobile", featured: true },
+  { name: "Android Native", category: "Mobile", featured: true },
+  //{ name: "React Native", category: "Mobile" },
 
   // Database
   { name: "PostgreSQL", category: "Database", featured: true },

@@ -1,18 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { Download } from "lucide-react";
 import { profileData } from "@/data/profile";
 
 export function Navbar() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   return (
     <header className="sticky top-0 z-50 bg-[var(--terminal-bg-elevated)] border-b border-[var(--terminal-border)] px-4 py-2.5 flex items-center justify-between backdrop-blur-md">
       {/* Traffic light buttons */}

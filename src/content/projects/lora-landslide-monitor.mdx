@@ -1,0 +1,64 @@
+---
+title: "Sistem Deteksi Dini Longsor — Android & IoT LoRa"
+summary: "Sistem pemantauan kestabilan tanah dan peringatan dini bencana tanah longsor berbasis aplikasi Android dengan transmisi nirkabel jarak jauh LoRa (Long Range)."
+category: "IoT & Mobile"
+year: 2025
+role: "Mobile & IoT Developer"
+technologies: ["Android", "Kotlin", "LoRa (Long Range)", "IoT Sensors", "Microcontroller"]
+---
+
+## 1. Ringkasan Proyek
+Proyek ini merupakan penelitian **Tugas Akhir** yang merancang dan mengimplementasikan **Sistem Deteksi Dini Tanah Longsor (Landslide Early Warning System)** berbasis aplikasi *mobile* Android yang diintegrasikan dengan jaringan sensor nirkabel berteknologi **LoRa (Long Range)**.
+
+Sistem dirancang untuk menjawab tantangan pemantauan lingkungan pada area rawan bencana di lereng perbukitan dan daerah terpencil yang memiliki keterbatasan sinyal telekomunikasi seluler (*blank spot*), dengan menyediakan transmisi telemetri berdaya rendah, jangkauan luas, serta peringatan darurat otomatis langsung ke perangkat pengguna.
+
+## 2. Latar Belakang & Masalah
+Bencana tanah longsor merupakan salah satu ancaman hidrometeorologi paling berbahaya dengan waktu kejadian yang sering kali sangat cepat:
+- **Keterbatasan Sinyal Seluler (Blank Spot):** Lokasi tebing atau lereng rawan longsor umumnya berada di dataran tinggi atau wilayah terpencil yang tidak terjangkau jaringan internet seluler (4G/5G).
+- **Keterbatasan Daya (Power Constraints):** Perangkat pemantau di alam liar membutuhkan sumber daya baterai/solar panel mandiri, sehingga protokol nirkabel standar seperti Wi-Fi atau GSM konvensional terlalu boros daya.
+- **Ketiadaan Peringatan Dini Real-time:** Masyarakat dan petugas mitigasi bencana sering kali terlambat mendapatkan informasi saat terjadi pergeseran tanah awal sebelum longsor besar terjadi.
+
+## 3. Solusi & Pendekatan Teknis
+Untuk mengatasi kendala geografis dan infrastruktur tersebut, sistem mengadopsi arsitektur terdesentralisasi:
+1. **Sensor Node (End-Device):** Dipasang langsung pada titik rawan longsor untuk mengukur parameter kritis tanah (seperti sensor kemiringan/akselerometer untuk pergerakan tanah serta sensor kelembaban tanah/soil moisture).
+2. **LoRa Wireless Telemetry:** Menggunakan frekuensi radio sub-GHz modul LoRa untuk mentransmisikan paket data sensor hingga jarak beberapa kilometer tanpa ketergantungan kuota internet seluler atau operator komersial.
+3. **Gateway / Receiver Node:** Menerima sinyal frekuensi radio LoRa, memvalidasi integritas data paket, dan meneruskannya ke lingkungan monitoring.
+4. **Android Monitoring Application:** Aplikasi mobile interaktif yang memvisualisasikan parameter sensor, menampilkan status keamanan lereng secara real-time, dan membunyikan alarm evakuasi saat ambang batas bahaya (*threshold*) terlampaui.
+
+## 4. Fitur Utama
+* **Real-time Telemetry Dashboard:** Visualisasi angka dan grafik fluktuasi pergerakan tanah serta kelembaban tanah secara langsung pada layar Android.
+* **Low-Power LoRa Communication:** Pengiriman data nirkabel jarak jauh berdaya rendah yang tahan terhadap interferensi cuaca dan hambatan vegetasi lereng.
+* **Multi-level Threshold Alert:** Klasifikasi status kewaspadaan berjenjang (**Aman / Normal**, **Waspada**, **Bahaya**) berbasis ambang batas toleransi pergeseran.
+* **Automated Audio-Visual Emergency Alarm:** Peringatan visual mencolok serta nada alarm otomatis pada aplikasi smartphone saat kondisi lereng memasuki level kritis.
+* **Historical Data & Sensor Health:** Pencatatan log data telemetri historis untuk memudahkan analisis mitigasi risiko dan pemantauan kondisi baterai node sensor.
+
+## 5. Arsitektur Sistem & Alur Kerja
+```text
+[Titik Lereng Rawan]
+Sensor Kemiringan + Kelembaban Tanah
+          │
+          ▼
+   Mikrokontroler
+          │
+          ▼
+   Modul Pemancar LoRa (Transmitter)
+          │  ~~~ Gelombang Radio Jarak Jauh (RF Sub-GHz) ~~~
+          ▼
+   Modul Penerima LoRa (Receiver Node / Gateway)
+          │
+          ▼
+   Aplikasi Android Pengguna
+   (Visualisasi Data, Logging, Alarm Evakuasi)
+```
+
+## 6. Teknologi & Perangkat yang Digunakan
+- **Mobile Development:** Kotlin, Android SDK
+- **Wireless Networking:** LoRa Module (Long Range RF Sub-GHz)
+- **Embedded & Sensor:** Microcontroller (Arduino Uno R3 + LoRa Module), Tilt Sensor / MPU6050, Soil Moisture Sensor YL-69
+- **Protokol & Data:** Serial UART, Custom Packet Payload Parsing, Local SQLite Logging
+- **Version Control & Docs:** Git, GitHub, Markdown
+
+## 7. Hasil & Dampak Penelitian
+Sistem berhasil diuji dan menunjukkan keandalan transmisi telemetri di area dengan kontur berbukit:
+1. Data sensor mampu terkirim secara periodik dengan *packet loss* yang sangat minim meskipun terhalang rintangan pepohonan dan kontur tanah.
+2. Aplikasi Android memberikan respons peringatan dini yang cepat begitu terjadi deviasi kemiringan tanah melewati batas ambang aman, memberikan jeda waktu evakuasi yang berharga bagi warga sekitar lereng.

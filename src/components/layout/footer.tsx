@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { profileData } from "@/data/profile";
 
 const navShortcuts = [
   { key: "F1", label: "Beranda", href: "#hero" },
