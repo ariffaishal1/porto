@@ -14,7 +14,7 @@ export const profileData: Profile = {
   location: "Indonesia",
   availability: "Terbuka untuk Peluang Kerja & Freelance",
   email: "ariffaishal1@gmail.com",
-  avatar: "/images/avatar/profile.jpg",
+  avatar: "/profile.jpg",
   resumeUrl: "/cv/cv.pdf",
   socialLinks: {
     github: "https://github.com/ariffaishal1",

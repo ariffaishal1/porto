@@ -3,8 +3,13 @@
 import React from "react";
 import { profileData } from "@/data/profile";
 import { AsciiBlackHole } from "@/components/ui/ascii-black-hole";
+import { useAccentColor } from "@/components/theme/accent-color-context";
+import { useBlackHole } from "@/components/theme/black-hole-context";
 
 export function AboutSection() {
+  const { setAccentColor, colors } = useAccentColor();
+  const { triggerCollapse, collapseState } = useBlackHole();
+
   return (
     <section id="about" className="flex flex-col gap-2 pt-4 border-t border-[var(--terminal-border)]">
       {/* Command prompt */}
@@ -18,9 +23,15 @@ export function AboutSection() {
 
       {/* Neofetch grid */}
       <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6 items-start pt-2">
-        {/* Left: 3D Animated ASCII Black Hole (No border box / purely terminal text) */}
-        <div className="flex items-center justify-start min-w-[240px]">
-          <AsciiBlackHole />
+        {/* Left: 3D Animated ASCII Black Hole (Clickable Easter Egg) */}
+        <div
+          onClick={triggerCollapse}
+          className="flex items-center justify-start min-w-[240px] cursor-pointer group transition-transform duration-200 hover:scale-[1.02] active:scale-95"
+          title="⚠️ Singularitas Gravitasi (Klik untuk memicu keruntuhan)"
+        >
+          <AsciiBlackHole
+            isHyperSpin={collapseState === "warning" || collapseState === "sucking"}
+          />
         </div>
 
         {/* Right: Info Lines */}
@@ -70,16 +81,18 @@ export function AboutSection() {
             <span className="text-[var(--terminal-text)]">{profileData.shortBio}</span>
           </div>
 
-          {/* Color palette blocks */}
+          {/* Color palette blocks (Linux neofetch easter egg) */}
           <div className="flex gap-1.5 mt-3">
-            <span className="w-6 h-3 rounded-sm bg-[#e06c75]" />
-            <span className="w-6 h-3 rounded-sm bg-[#f0c674]" />
-            <span className="w-6 h-3 rounded-sm bg-[#a3be8c]" />
-            <span className="w-6 h-3 rounded-sm bg-[#22d3a7]" />
-            <span className="w-6 h-3 rounded-sm bg-[#88c0d0]" />
-            <span className="w-6 h-3 rounded-sm bg-[#81a1c1]" />
-            <span className="w-6 h-3 rounded-sm bg-[#b48ead]" />
-            <span className="w-6 h-3 rounded-sm bg-[#c5cad3]" />
+            {colors.map((color) => (
+              <button
+                key={color.id}
+                onClick={() => setAccentColor(color.id)}
+                type="button"
+                aria-label={`Color swatch ${color.name}`}
+                className="w-6 h-3 rounded-sm transition-transform hover:scale-110 active:scale-95 cursor-pointer outline-none"
+                style={{ backgroundColor: color.darkHex }}
+              />
+            ))}
           </div>
         </div>
       </div>

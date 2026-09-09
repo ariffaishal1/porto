@@ -18,7 +18,7 @@ export const skillsData: Skill[] = [
 
   // Mobile
   { name: "Flutter", category: "Mobile", featured: true },
-  //{ name: "Dart", category: "Mobile", featured: true },
+  { name: "Dart", category: "Mobile", featured: true },
   { name: "Android Native", category: "Mobile", featured: true },
   //{ name: "React Native", category: "Mobile" },
 
@@ -26,6 +26,10 @@ export const skillsData: Skill[] = [
   { name: "PostgreSQL", category: "Database", featured: true },
   { name: "MySQL", category: "Database", featured: true },
   { name: "MongoDB", category: "Database" },
+
+  // AI
+  { name: "Google Gemini API SDK", category: "AI", featured: true },
+  { name: "OpenAI API SDK", category: "AI", featured: true },
 
   // Tools
   { name: "Git & GitHub", category: "Tools", featured: true },

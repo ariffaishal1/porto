@@ -1,10 +1,11 @@
-export type SkillCategory = 
+export type SkillCategory =
   | "Frontend"
   | "Backend"
   | "Mobile"
   | "Database"
   | "Tools"
-  | "Concepts";
+  | "Concepts"
+  | "AI";
 
 export type Skill = {
   name: string;

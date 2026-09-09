@@ -2,6 +2,13 @@ import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import "@/app/globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { AccentColorProvider } from "@/components/theme/accent-color-context";
+import { CommandPaletteProvider } from "@/components/layout/command-palette-context";
+import { BlackHoleProvider } from "@/components/theme/black-hole-context";
+import { CollapseLayoutWrapper } from "@/components/layout/collapse-layout-wrapper";
+import { BlackHoleCollapseOverlay } from "@/components/ui/black-hole-collapse";
+import { TerminalCommandPalette } from "@/components/ui/terminal-command-palette";
+import { MatrixRain } from "@/components/ui/matrix-rain";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { generateBaseMetadata } from "@/lib/metadata";
@@ -58,13 +65,24 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="max-w-[960px] w-full mx-auto min-h-screen flex flex-col border-x border-[var(--terminal-border)] shadow-2xl">
-            <Navbar />
-            <main className="flex-grow px-4 sm:px-6 py-6 pb-28 flex flex-col gap-8">{children}</main>
-            <Footer />
-          </div>
+          <BlackHoleProvider>
+            <AccentColorProvider>
+              <CommandPaletteProvider>
+                <MatrixRain />
+                <CollapseLayoutWrapper>
+                  <Navbar />
+                  <main className="flex-grow px-4 sm:px-6 py-6 pb-28 flex flex-col gap-8">{children}</main>
+                  <Footer />
+                </CollapseLayoutWrapper>
+                <BlackHoleCollapseOverlay />
+                <TerminalCommandPalette />
+              </CommandPaletteProvider>
+            </AccentColorProvider>
+          </BlackHoleProvider>
         </ThemeProvider>
       </body>
     </html>
   );
 }
+
+

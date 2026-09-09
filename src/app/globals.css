@@ -59,6 +59,33 @@
   --portfolio-marker: var(--terminal-accent);
 }
 
+:root.matrix-mode,
+:root.dark.matrix-mode {
+  --terminal-bg: #020703 !important;
+  --terminal-bg-elevated: #051307 !important;
+  --terminal-bg-panel: #081f0c !important;
+  --terminal-bg-selection: #0e3515 !important;
+  --terminal-text: #22c55e !important;
+  --terminal-text-dim: #15803d !important;
+  --terminal-text-bright: #86efac !important;
+  --terminal-accent: #00ff66 !important;
+  --terminal-accent-dim: rgba(0, 255, 102, 0.2) !important;
+  --terminal-amber: #4ade80 !important;
+  --terminal-blue: #34d399 !important;
+  --terminal-rose: #059669 !important;
+  --terminal-purple: #10b981 !important;
+  --terminal-cyan: #00ffcc !important;
+  --terminal-green: #00ff41 !important;
+  --terminal-border: #063311 !important;
+
+  --portfolio-background: var(--terminal-bg) !important;
+  --portfolio-surface: var(--terminal-bg-panel) !important;
+  --portfolio-text: var(--terminal-text) !important;
+  --portfolio-muted: var(--terminal-text-dim) !important;
+  --portfolio-border: var(--terminal-border) !important;
+  --portfolio-marker: var(--terminal-accent) !important;
+}
+
 html {
   scroll-behavior: smooth;
   font-family: var(--font-mono);
@@ -238,8 +265,73 @@ body {
   margin-block: 1.25rem;
   border-left: 3px solid var(--terminal-accent);
   padding: 0.25rem 0 0.25rem 1rem;
-  color: var(--terminal-text-dim);
-  font-style: italic;
+}
+
+/* ── Black Hole Singularity Collapse Animations ── */
+@keyframes blackHoleShake {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  15% { transform: translate(-6px, -4px) rotate(-0.8deg); }
+  30% { transform: translate(6px, 4px) rotate(0.8deg); }
+  45% { transform: translate(-8px, 6px) rotate(-1.2deg); }
+  60% { transform: translate(8px, -6px) rotate(1.2deg); }
+  75% { transform: translate(-10px, -5px) rotate(-1.8deg); }
+  90% { transform: translate(10px, 5px) rotate(1.8deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes blackHoleSuck {
+  0% {
+    transform: scale(1) rotate(0deg);
+    filter: blur(0) brightness(1);
+    opacity: 1;
+  }
+  25% {
+    transform: scale(0.85) rotate(45deg);
+    filter: blur(2px) brightness(1.3);
+    opacity: 0.95;
+  }
+  50% {
+    transform: scale(0.5) rotate(180deg);
+    filter: blur(6px) brightness(1.8);
+    opacity: 0.75;
+  }
+  75% {
+    transform: scale(0.2) rotate(450deg);
+    filter: blur(12px) brightness(2.5);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(0) rotate(720deg);
+    filter: blur(24px) brightness(4);
+    opacity: 0;
+  }
+}
+
+@keyframes bigBangFlash {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+
+.black-hole-warning {
+  animation: blackHoleShake 0.09s infinite ease-in-out !important;
+  box-shadow: inset 0 0 60px rgba(239, 68, 68, 0.4), 0 0 40px rgba(239, 68, 68, 0.3) !important;
+  filter: contrast(1.15) !important;
+}
+
+.black-hole-sucking {
+  animation: blackHoleSuck 1.7s cubic-bezier(0.5, 0, 0.2, 1) forwards !important;
+  transform-origin: 50% 30% !important;
+  pointer-events: none !important;
+}
+
+.big-bang-burst {
+  animation: bigBangFlash 0.9s ease-out forwards !important;
 }
 
 .project-prose :where(img) {

@@ -50,7 +50,7 @@ Copy `.env.example` to `.env.local` for local configuration.
 - `sections/` — Page section components (hero, about, skills, projects, experience, contact)
 - `layout/` — Navbar, Footer
 - `theme/` — ThemeProvider (wraps next-themes), ThemeToggle
-- `ui/` — Reusable UI primitives: Button, Card, Container, Badge, SectionHeading, SocialIcons
+- `ui/` — Interactive UI components: AsciiBlackHole, MatrixRain, TerminalCommandPalette
 
 ### Data Layer (`src/data/`)
 

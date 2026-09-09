@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 
 interface AsciiBlackHoleProps {
   className?: string;
+  isHyperSpin?: boolean;
+  onClick?: () => void;
 }
 
 // Master Braille Artwork supplied by the user (34 lines x 112 cols)
@@ -49,7 +51,11 @@ const CENTER_Y = 18.5;
 const CENTER_X = 54.8;
 const ASPECT = 2.0;
 
-export function AsciiBlackHole({ className = "" }: AsciiBlackHoleProps) {
+export function AsciiBlackHole({
+  className = "",
+  isHyperSpin = false,
+  onClick,
+}: AsciiBlackHoleProps) {
   const [frame, setFrame] = useState<string>(() => BASE_ART_LINES.join("\n"));
   const containerRef = useRef<HTMLDivElement>(null);
   const isVisibleRef = useRef<boolean>(true);
@@ -83,7 +89,7 @@ export function AsciiBlackHole({ className = "" }: AsciiBlackHoleProps) {
     let t = 0;
     let animId: number;
     let lastTime = 0;
-    const FPS = 20;
+    const FPS = isHyperSpin ? 40 : 20;
     const interval = 1000 / FPS;
 
     const render = (currentTime: number) => {
@@ -95,7 +101,7 @@ export function AsciiBlackHole({ className = "" }: AsciiBlackHoleProps) {
       if (delta < interval) return;
       lastTime = currentTime - (delta % interval);
 
-      t += 0.05;
+      t += isHyperSpin ? 0.2 : 0.05;
 
       let output = "";
 
@@ -164,6 +170,7 @@ export function AsciiBlackHole({ className = "" }: AsciiBlackHoleProps) {
       }
 
       setFrame(output.trimEnd());
+      animId = requestAnimationFrame(render);
     };
 
     animId = requestAnimationFrame(render);
@@ -172,14 +179,20 @@ export function AsciiBlackHole({ className = "" }: AsciiBlackHoleProps) {
       cancelAnimationFrame(animId);
       observer.disconnect();
     };
-  }, []);
+  }, [isHyperSpin]);
 
   return (
-    <div ref={containerRef} className={`select-none overflow-x-auto ${className}`}>
+    <div
+      ref={containerRef}
+      onClick={onClick}
+      className={`select-none overflow-x-auto ${onClick ? "cursor-pointer" : ""} ${className}`}
+    >
       <pre
-        className="text-[var(--terminal-accent)] text-[4.2px] sm:text-[5px] md:text-[5.5px] leading-[1.0] tracking-[0.2px] font-mono font-normal whitespace-pre"
+        className="text-[var(--terminal-accent)] text-[4.2px] sm:text-[5px] md:text-[5.5px] leading-[1.0] tracking-[0.2px] font-mono font-normal whitespace-pre transition-all duration-300"
         style={{
-          textShadow: "0 0 10px rgba(34, 211, 167, 0.4)",
+          textShadow: isHyperSpin
+            ? "0 0 25px rgba(239, 68, 68, 0.9), 0 0 50px rgba(239, 68, 68, 0.6)"
+            : "0 0 10px rgba(34, 211, 167, 0.4)",
         }}
       >
         {frame}

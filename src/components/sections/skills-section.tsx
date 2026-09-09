@@ -7,8 +7,9 @@ const categories: SkillCategory[] = [
   "Backend",
   "Mobile",
   "Database",
+  "AI",
   "Tools",
-  "Concepts",
+  "Concepts"
 ];
 
 export function SkillsSection() {
