@@ -5,7 +5,7 @@ import { experienceData } from "@/data/experience";
 import { educationData } from "@/data/education";
 import { skillsData } from "@/data/skills";
 import { projectsData } from "@/data/projects";
-import { CvClientView } from "./cv-client-view";
+import { CvClientView } from "@/components/cv/cv-client-view";
 
 export const metadata: Metadata = {
   title: `Curriculum Vitae — ${profileData.name}, S.Kom.`,
