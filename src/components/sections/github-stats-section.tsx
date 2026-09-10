@@ -89,32 +89,63 @@ function generateContributionWeeks() {
 const CONTRIBUTION_WEEKS = generateContributionWeeks();
 
 export function GithubStatsSection() {
+  const [repos, setRepos] = useState<RepoItem[]>(TOP_REPOS);
   const [repoCount, setRepoCount] = useState(6);
   const [syncStatus, setSyncStatus] = useState<"idle" | "syncing" | "synced">("idle");
+  const [dataSource, setDataSource] = useState<"live" | "fallback">("fallback");
   const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
   const [hoveredDay, setHoveredDay] = useState<{ date: string; count: number } | null>(null);
   const sectionId = useId();
+
+  const fetchGithubStats = React.useCallback(async () => {
+    try {
+      const res = await fetch("/api/github");
+      if (res.ok) {
+        const data = await res.json();
+        if (data?.user?.public_repos) {
+          setRepoCount(data.user.public_repos);
+        }
+        if (Array.isArray(data?.repos) && data.repos.length > 0) {
+          setRepos(data.repos);
+        }
+        if (data?.source) {
+          setDataSource(data.source);
+        }
+        setLastSyncTime(new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }));
+      }
+    } catch {
+      // Graceful fallback already in place
+    }
+  }, []);
+
+  React.useEffect(() => {
+    let active = true;
+    fetch("/api/github")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!active || !data) return;
+        if (data?.user?.public_repos) setRepoCount(data.user.public_repos);
+        if (Array.isArray(data?.repos) && data.repos.length > 0) setRepos(data.repos);
+        if (data?.source) setDataSource(data.source);
+        setLastSyncTime(new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }));
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleSync = async (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     setSyncStatus("syncing");
 
     try {
-      const res = await fetch("https://api.github.com/users/ariffaishal1");
-      if (res.ok) {
-        const data = await res.json();
-        if (typeof data.public_repos === "number") {
-          setRepoCount(data.public_repos);
-        }
-      }
-    } catch {
-      // Graceful fallback if offline or rate limited
+      await fetchGithubStats();
     } finally {
       setTimeout(() => {
         setSyncStatus("synced");
-        setLastSyncTime(new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }));
         setTimeout(() => setSyncStatus("idle"), 3000);
-      }, 600);
+      }, 500);
     }
   };
 
@@ -317,16 +348,28 @@ export function GithubStatsSection() {
         {/* Bottom Section: Top Public Repositories (CLI Tree Table) */}
         <div className="border-t border-[var(--terminal-border)]/60 pt-3 flex flex-col gap-2">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-[var(--terminal-text-bright)] font-semibold">
-              Repositori Publik Terpilih:
-            </span>
-            <span className="text-[10px] text-[var(--terminal-text-dim)] font-mono">
+            <div className="flex items-center gap-2">
+              <span className="text-[var(--terminal-text-bright)] font-semibold">
+                Repositori Publik Terpilih:
+              </span>
+              <span
+                className={`text-[10px] font-mono px-1.5 py-0.2 rounded border ${
+                  dataSource === "live"
+                    ? "text-[var(--terminal-green)] border-[var(--terminal-green)]/40 bg-[var(--terminal-green)]/10"
+                    : "text-[var(--terminal-text-dim)] border-[var(--terminal-border)]"
+                }`}
+                title={dataSource === "live" ? "Data diambil langsung dari GitHub API" : "Mode offline/cache"}
+              >
+                ● {dataSource === "live" ? "live api" : "cached"}
+              </span>
+            </div>
+            <span className="text-[10px] text-[var(--terminal-text-dim)] font-mono hidden sm:inline">
               ls -l --sort=relevance
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 pt-1">
-            {TOP_REPOS.map((repo) => (
+            {repos.map((repo) => (
               <a
                 key={repo.name}
                 href={repo.url}

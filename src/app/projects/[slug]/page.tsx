@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { TerminalCodeBlock } from "@/components/ui/terminal-code-block";
 import { getProjectBySlug, getAllProjectSlugs } from "@/lib/mdx";
 import { projectsData } from "@/data/projects";
 import { generateBaseMetadata } from "@/lib/metadata";
@@ -174,7 +175,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
         {/* MDX Body in Terminal Prose */}
         <div className="project-prose border-t border-[var(--terminal-border)] pt-4">
-          <MDXRemote source={projectMdx.content} />
+          <MDXRemote
+            source={projectMdx.content}
+            components={{
+              pre: TerminalCodeBlock,
+            }}
+          />
         </div>
       </article>
     </div>

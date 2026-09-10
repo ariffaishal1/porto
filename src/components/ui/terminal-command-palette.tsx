@@ -9,7 +9,8 @@ import { useBlackHole } from "@/components/theme/black-hole-context";
 import { profileData } from "@/data/profile";
 import { projectsData } from "@/data/projects";
 import { skillsData } from "@/data/skills";
-import { Terminal, CornerDownLeft, Sparkles, X } from "lucide-react";
+import { Terminal, CornerDownLeft, Sparkles, X, Volume2, VolumeX } from "lucide-react";
+import { playKeyClick, playCommandBeep, isSoundEnabled, setSoundEnabled, toggleSound } from "@/lib/sound";
 
 interface LogEntry {
   id: string;
@@ -33,6 +34,10 @@ const COMMAND_LIST: CommandInfo[] = [
   { command: "experience", aliases: ["git log", "karir"], description: "Buka riwayat karir & pengalaman", category: "Navigasi" },
   { command: "contact", aliases: ["kontak"], description: "Buka formulir kontak interaktif", category: "Navigasi" },
   { command: "cat", description: "Baca studi kasus proyek (contoh: cat prd-gene)", category: "Navigasi" },
+  { command: "tree", description: "Tampilkan visualisasi pohon struktur portofolio", category: "Info" },
+  { command: "curl", aliases: ["fetch"], description: "Ambil data JSON mentah (contoh: curl profile, curl github)", category: "Aksi" },
+  { command: "sound", aliases: ["audio"], description: "Toggle efek suara ketikan keyboard mekanik retro", category: "Aksi" },
+  { command: "ping", description: "Tes ping latensi jaringan ke host", category: "Info" },
   { command: "theme", description: "Ganti tema tampilan (dark, light, atau toggle)", category: "Aksi" },
   { command: "cv", aliases: ["resume"], description: "Buka dan unduh Curriculum Vitae (PDF)", category: "Aksi" },
   { command: "stats", aliases: ["gh", "github-stats"], description: "Buka widget GitHub stats & peta kontribusi", category: "Navigasi" },
@@ -56,6 +61,20 @@ export function TerminalCommandPalette() {
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
   const [isMaximized, setIsMaximized] = useState(false);
+  const [soundEnabled, setSoundEnabledState] = useState(true);
+
+  // Sync sound setting from localStorage on mount
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      setSoundEnabledState(isSoundEnabled());
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  const handleToggleSound = () => {
+    const next = toggleSound();
+    setSoundEnabledState(next);
+  };
 
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalEndRef = useRef<HTMLDivElement>(null);
@@ -230,6 +249,171 @@ export function TerminalCommandPalette() {
           }
         }
         break;
+
+      case "tree":
+        output = (
+          <div className="flex flex-col gap-1 text-xs font-mono leading-relaxed py-1">
+            <div className="text-[var(--terminal-green)] font-semibold">
+              ~/portfolio (arif-faishal-nugraha)
+            </div>
+            <pre className="text-[var(--terminal-text-dim)] font-mono text-[11px] leading-snug">
+{`├── 📁 src/
+│   ├── 📁 app/
+│   │   ├── 📁 api/ (contact, github)
+│   │   ├── 📁 projects/[slug]/
+│   │   ├── 📄 layout.tsx
+│   │   └── 📄 page.tsx
+│   ├── 📁 components/
+│   │   ├── 📁 layout/ (navbar, footer, command-palette)
+│   │   ├── 📁 sections/
+│   │   │   ├── ⚡ hero-section.tsx
+│   │   │   ├── 👤 about-section.tsx (Braille Singularity)
+│   │   │   ├── 📦 skills-section.tsx
+│   │   │   ├── 🚀 projects-section.tsx
+│   │   │   ├── 📊 github-stats-section.tsx (Live API)
+│   │   │   ├── 💼 experience-section.tsx
+│   │   │   └── ✉️ contact-section.tsx
+│   │   └── 📁 ui/ (terminal-command-palette, code-block, matrix)
+│   ├── 📁 content/ (MDX case studies: prd-gene, lora-landslide)
+│   └── 📁 data/ (profile, projects, skills, experience, navigation)
+└── 📁 public/
+    ├── 📁 cv/ (cv.pdf)
+    └── 📁 images/ (thumbnails & assets)`}
+            </pre>
+            <span className="text-[10px] text-[var(--terminal-text-dim)] pt-1 border-t border-[var(--terminal-border)]/40">
+              6 directories, 24 core modules • Next.js 16 (App Router) + Tailwind CSS v4
+            </span>
+          </div>
+        );
+        break;
+
+      case "curl":
+      case "fetch": {
+        const target = arg.replace(/^\/+/, "");
+        if (target === "profile" || target === "whoami" || target === "me") {
+          output = (
+            <div className="flex flex-col gap-1 text-[11px] font-mono bg-[var(--terminal-bg-panel)] p-2 rounded border border-[var(--terminal-border)]">
+              <span className="text-[var(--terminal-accent)]">HTTP/1.1 200 OK — application/json</span>
+              <pre className="text-[var(--terminal-green)] overflow-x-auto">
+                {JSON.stringify(
+                  {
+                    name: profileData.name,
+                    role: profileData.role,
+                    headline: profileData.headline,
+                    email: profileData.email,
+                    location: profileData.location,
+                    social: profileData.socialLinks,
+                  },
+                  null,
+                  2
+                )}
+              </pre>
+            </div>
+          );
+        } else if (target === "projects" || target === "proyek") {
+          output = (
+            <div className="flex flex-col gap-1 text-[11px] font-mono bg-[var(--terminal-bg-panel)] p-2 rounded border border-[var(--terminal-border)]">
+              <span className="text-[var(--terminal-accent)]">HTTP/1.1 200 OK — application/json ({projectsData.length} records)</span>
+              <pre className="text-[var(--terminal-cyan)] overflow-x-auto">
+                {JSON.stringify(
+                  projectsData.map((p) => ({
+                    slug: p.slug,
+                    title: p.title,
+                    category: p.category,
+                    technologies: p.technologies,
+                    demoUrl: p.demoUrl,
+                    repoUrl: p.repositoryUrl,
+                  })),
+                  null,
+                  2
+                )}
+              </pre>
+            </div>
+          );
+        } else if (target === "skills" || target === "keahlian") {
+          output = (
+            <div className="flex flex-col gap-1 text-[11px] font-mono bg-[var(--terminal-bg-panel)] p-2 rounded border border-[var(--terminal-border)]">
+              <span className="text-[var(--terminal-accent)]">HTTP/1.1 200 OK — application/json ({skillsData.length} skills)</span>
+              <pre className="text-[var(--terminal-purple)] overflow-x-auto">
+                {JSON.stringify(skillsData.filter((s) => s.featured), null, 2)}
+              </pre>
+            </div>
+          );
+        } else if (target === "github" || target === "api/github") {
+          output = (
+            <div className="flex flex-col gap-1 text-[11px] font-mono bg-[var(--terminal-bg-panel)] p-2 rounded border border-[var(--terminal-border)]">
+              <span className="text-[var(--terminal-accent)]">GET /api/github HTTP/1.1 200 OK</span>
+              <pre className="text-[var(--terminal-amber)] overflow-x-auto">
+                {JSON.stringify(
+                  {
+                    user: "ariffaishal1",
+                    api: "https://api.github.com/users/ariffaishal1",
+                    statsUrl: "#github",
+                    profileUrl: profileData.socialLinks.github,
+                  },
+                  null,
+                  2
+                )}
+              </pre>
+            </div>
+          );
+        } else {
+          output = (
+            <div className="flex flex-col gap-1 text-xs">
+              <span className="text-[var(--terminal-rose)]">curl: endpoint &apos;{arg || "/"}&apos; tidak ditemukan.</span>
+              <span className="text-[var(--terminal-text-dim)] text-[11px]">
+                Endpoint yang tersedia: <code className="text-[var(--terminal-cyan)]">curl profile</code>, <code className="text-[var(--terminal-cyan)]">curl projects</code>, <code className="text-[var(--terminal-cyan)]">curl skills</code>, <code className="text-[var(--terminal-cyan)]">curl github</code>
+              </span>
+            </div>
+          );
+        }
+        break;
+      }
+
+      case "sound":
+      case "audio": {
+        let next: boolean;
+        if (arg === "on" || arg === "enable") {
+          setSoundEnabled(true);
+          next = true;
+        } else if (arg === "off" || arg === "disable") {
+          setSoundEnabled(false);
+          next = false;
+        } else {
+          next = toggleSound();
+        }
+        setSoundEnabledState(next);
+        output = (
+          <div className="flex items-center gap-2 text-xs font-mono">
+            <span className={next ? "text-[var(--terminal-green)]" : "text-[var(--terminal-rose)]"}>
+              {next ? "🔊 Suara Keyboard Mekanik: AKTIF" : "🔇 Suara Keyboard Mekanik: NONAKTIF"}
+            </span>
+            <span className="text-[var(--terminal-text-dim)] text-[11px]">
+              ({next ? "Efek klik switch mekanik kini bersuara saat mengetik" : "Mode hening diaktifkan"})
+            </span>
+          </div>
+        );
+        break;
+      }
+
+      case "ping": {
+        const host = arg || "github.com";
+        const rtts = [18.2, 19.4, 17.8, 18.9];
+        output = (
+          <div className="flex flex-col gap-1 text-[11px] font-mono leading-tight py-0.5">
+            <span className="text-[var(--terminal-accent)]">PING {host} (56 data bytes):</span>
+            {rtts.map((time, idx) => (
+              <span key={idx} className="text-[var(--terminal-text-bright)]">
+                64 bytes from {host}: icmp_seq={idx + 1} ttl=116 time={time} ms
+              </span>
+            ))}
+            <div className="text-[var(--terminal-text-dim)] pt-1 border-t border-[var(--terminal-border)]/40">
+              --- {host} ping statistics --- 4 packets transmitted, 4 received, 0% packet loss, min/avg/max = 17.8/18.5/19.4 ms
+            </div>
+          </div>
+        );
+        break;
+      }
 
       case "experience":
       case "karir":
@@ -454,6 +638,12 @@ export function TerminalCommandPalette() {
         );
     }
 
+    if (isError) {
+      playCommandBeep("error");
+    } else {
+      playCommandBeep("success");
+    }
+
     setLogs((prev) => [
       ...prev,
       {
@@ -467,6 +657,7 @@ export function TerminalCommandPalette() {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    playKeyClick();
     if (e.key === "Enter") {
       e.preventDefault();
       executeCommand(input);
@@ -561,6 +752,23 @@ export function TerminalCommandPalette() {
           </div>
 
           <div className="flex items-center gap-2">
+            <button
+              onClick={handleToggleSound}
+              title={soundEnabled ? "Matikan efek suara keyboard mekanik (sound off)" : "Nyalakan efek suara keyboard mekanik (sound on)"}
+              className="text-[var(--terminal-text-dim)] hover:text-[var(--terminal-accent)] p-1 rounded transition-colors flex items-center gap-1 font-mono text-[10px] cursor-pointer"
+            >
+              {soundEnabled ? (
+                <>
+                  <Volume2 className="w-3.5 h-3.5 text-[var(--terminal-accent)]" />
+                  <span className="hidden sm:inline text-[var(--terminal-accent)]">sound on</span>
+                </>
+              ) : (
+                <>
+                  <VolumeX className="w-3.5 h-3.5 opacity-60" />
+                  <span className="hidden sm:inline opacity-60">muted</span>
+                </>
+              )}
+            </button>
             <span className="text-[10px] text-[var(--terminal-text-dim)] bg-[var(--terminal-bg-panel)] px-1.5 py-0.5 rounded border border-[var(--terminal-border)] font-mono">
               ESC
             </span>
@@ -613,7 +821,10 @@ export function TerminalCommandPalette() {
               ref={inputRef}
               type="text"
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={(e) => {
+                setInput(e.target.value);
+                playKeyClick();
+              }}
               onKeyDown={handleKeyDown}
               placeholder="Ketik perintah... (contoh: help, projects, skills, theme)"
               className="flex-1 bg-transparent border-0 outline-none text-[var(--terminal-text-bright)] font-mono text-xs sm:text-sm placeholder-[var(--terminal-text-dim)]/60"
