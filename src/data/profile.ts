@@ -11,11 +11,11 @@ export const profileData: Profile = {
     "Fokus utama saya bertumpu pada ekosistem Next.js, React, TypeScript, Flutter, dan AI. Saya memprioritaskan kode yang bersih, modular, mudah dipelihara, serta pengalaman interaksi pengguna yang mulus.",
     "Siap berkontribusi dalam tim rekayasa perangkat lunak profesional maupun berkolaborasi dalam membangun produk inovatif dari tahap perancangan hingga rilis."
   ],
-  location: "Indonesia",
+  location: "Majalengka, Jawa Barat, Indonesia",
   availability: "Terbuka untuk Peluang Kerja & Freelance",
   email: "ariffaishal1@gmail.com",
   avatar: "/profile.jpg",
-  resumeUrl: "/cv/cv.pdf",
+  resumeUrl: "/cv",
   socialLinks: {
     github: "https://github.com/ariffaishal1",
     linkedin: "https://www.linkedin.com/in/arif-faishal-nugraha/",

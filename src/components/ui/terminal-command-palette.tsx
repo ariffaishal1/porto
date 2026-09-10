@@ -491,18 +491,14 @@ export function TerminalCommandPalette() {
       case "resume":
         output = (
           <div className="flex flex-col gap-1 text-xs">
-            <span className="text-[var(--terminal-green)]">→ Mengunduh berkas Curriculum Vitae Arif Faishal Nugraha...</span>
-            <a
-              href={profileData.resumeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[var(--terminal-blue)] hover:underline"
-            >
-              Klik di sini jika unduhan tidak otomatis terbuka ({profileData.resumeUrl})
-            </a>
+            <span className="text-[var(--terminal-green)]">→ Membuka halaman Curriculum Vitae resmi...</span>
+            <span className="text-[var(--terminal-text-dim)] text-[11px]">
+              Tersedia opsi cetak &amp; simpan PDF satu-klik berstandar ATS.
+            </span>
           </div>
         );
-        window.open(profileData.resumeUrl, "_blank");
+        router.push("/cv");
+        setTimeout(closePalette, 400);
         break;
 
       case "stats":

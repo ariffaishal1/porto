@@ -53,6 +53,13 @@ export function AboutSection() {
           </div>
 
           <div>
+            <span className="text-[var(--terminal-accent)] font-semibold">Education:</span>{" "}
+            <span className="text-[var(--terminal-text)]">
+              S1 Informatika (Univ. Widyatama, 2025) &bull; D3 Teknik Komputer (Telkom Univ, 2022)
+            </span>
+          </div>
+
+          <div>
             <span className="text-[var(--terminal-accent)] font-semibold">Location:</span>{" "}
             <span className="text-[var(--terminal-text)]">{profileData.location}</span>
           </div>

@@ -3,8 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
-import { Download, Terminal } from "lucide-react";
-import { profileData } from "@/data/profile";
+import { FileText, Terminal } from "lucide-react";
 import { useCommandPalette } from "@/components/layout/command-palette-context";
 
 export function Navbar() {
@@ -50,14 +49,14 @@ export function Navbar() {
           </kbd>
         </button>
 
-        <a
-          href={profileData.resumeUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hidden sm:inline-flex items-center gap-1 text-xs text-[var(--terminal-accent)] hover:underline border border-[var(--terminal-border)] px-2.5 py-1 rounded bg-[var(--terminal-bg-panel)]"
+        <Link
+          href="/cv"
+          className="hidden sm:inline-flex items-center gap-1.5 text-xs text-[var(--terminal-accent)] hover:bg-[var(--terminal-bg-selection)] border border-[var(--terminal-border)] px-2.5 py-1 rounded bg-[var(--terminal-bg-panel)] transition-colors font-mono"
+          title="Buka & Cetak Curriculum Vitae resmi"
         >
-          <Download className="w-3 h-3" /> CV
-        </a>
+          <FileText className="w-3.5 h-3.5" />
+          <span>CV</span>
+        </Link>
         <ThemeToggle />
         <span className="text-[11px] text-[var(--terminal-text-dim)] hidden md:inline">
           utf-8
