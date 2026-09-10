@@ -49,7 +49,12 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="id" suppressHydrationWarning className="scroll-smooth dark">
+    <html
+      lang="id"
+      suppressHydrationWarning
+      className="scroll-smooth dark"
+      data-scroll-behavior="smooth"
+    >
       <head>
         <script
           type="application/ld+json"
