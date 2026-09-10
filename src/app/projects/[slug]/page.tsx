@@ -1,6 +1,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getProjectBySlug, getAllProjectSlugs } from "@/lib/mdx";
 import { projectsData } from "@/data/projects";
@@ -134,6 +135,35 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             </div>
           )}
         </div>
+
+        {/* Project Visual Preview in Terminal Frame */}
+        {projectData?.thumbnail && (
+          <div className="rounded-md border border-[var(--terminal-border)] overflow-hidden bg-[var(--terminal-bg-panel)] shadow-sm">
+            <div className="bg-[var(--terminal-bg-elevated)] border-b border-[var(--terminal-border)] px-3 py-1.5 flex items-center justify-between text-xs text-[var(--terminal-text-dim)] select-none">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57] inline-block" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e] inline-block" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#28c840] inline-block" />
+                <span className="ml-1.5 font-mono text-[11px] text-[var(--terminal-text)]">
+                  preview://{slug}
+                </span>
+              </span>
+              <span className="font-mono text-[10px] text-[var(--terminal-accent)]">
+                [image-viewer]
+              </span>
+            </div>
+            <div className="relative w-full aspect-video sm:max-h-[420px] bg-black/50 overflow-hidden">
+              <Image
+                src={projectData.thumbnail}
+                alt={projectMdx.meta.title}
+                fill
+                priority
+                className="object-cover object-center"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 850px"
+              />
+            </div>
+          </div>
+        )}
 
         {/* MDX Body in Terminal Prose */}
         <div className="project-prose border-t border-[var(--terminal-border)] pt-4">
