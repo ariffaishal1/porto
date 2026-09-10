@@ -148,18 +148,25 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                   preview://{slug}
                 </span>
               </span>
-              <span className="font-mono text-[10px] text-[var(--terminal-accent)]">
-                [image-viewer]
-              </span>
+              <a
+                href={projectData.thumbnail}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-[10px] text-[var(--terminal-blue)] hover:text-[var(--terminal-accent)] hover:underline transition-colors"
+                title="Buka gambar ukuran penuh di tab baru"
+              >
+                [buka ukuran penuh ↗]
+              </a>
             </div>
-            <div className="relative w-full aspect-video sm:max-h-[420px] bg-black/50 overflow-hidden">
+            <div className="relative w-full bg-[var(--terminal-bg-panel)] flex items-center justify-center p-2 sm:p-3 overflow-hidden">
               <Image
                 src={projectData.thumbnail}
                 alt={projectMdx.meta.title}
-                fill
+                width={1280}
+                height={720}
                 priority
-                className="object-cover object-center"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 850px"
+                className="w-full h-auto max-h-[580px] object-contain rounded border border-[var(--terminal-border)]/40 shadow-sm"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 900px"
               />
             </div>
           </div>
