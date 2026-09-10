@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     }
 
     const resendApiKey = process.env.RESEND_API_KEY;
-    const contactEmail = process.env.CONTACT_EMAIL || "ariffaishal.dev@gmail.com";
+    const contactEmail = process.env.CONTACT_EMAIL || "ariffaishal1@gmail.com";
     const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
 
     // Graceful fallback if Resend API key is not configured locally yet

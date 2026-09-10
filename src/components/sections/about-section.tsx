@@ -27,7 +27,6 @@ export function AboutSection() {
         <div
           onClick={triggerCollapse}
           className="flex items-center justify-start min-w-[240px] cursor-pointer group transition-transform duration-200 hover:scale-[1.02] active:scale-95"
-          title="⚠️ Singularitas Gravitasi (Klik untuk memicu keruntuhan)"
         >
           <AsciiBlackHole
             isHyperSpin={collapseState === "warning" || collapseState === "sucking"}
