@@ -11,6 +11,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { generateBaseMetadata } from "@/lib/metadata";
 import { getPersonAndWebsiteJsonLd, sanitizeJsonLd } from "@/lib/jsonld";
+import { Analytics } from "@vercel/analytics/next";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -62,6 +63,7 @@ export default function RootLayout({
             </AccentColorProvider>
           </BlackHoleProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
