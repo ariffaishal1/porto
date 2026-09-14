@@ -6,13 +6,11 @@ import { AccentColorProvider } from "@/components/theme/accent-color-context";
 import { CommandPaletteProvider } from "@/components/layout/command-palette-context";
 import { BlackHoleProvider } from "@/components/theme/black-hole-context";
 import { CollapseLayoutWrapper } from "@/components/layout/collapse-layout-wrapper";
-import { BlackHoleCollapseOverlay } from "@/components/ui/black-hole-collapse";
-import { TerminalCommandPalette } from "@/components/ui/terminal-command-palette";
-import { MatrixRain } from "@/components/ui/matrix-rain";
+import { LazyOverlays } from "@/components/layout/lazy-overlays";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { generateBaseMetadata } from "@/lib/metadata";
-import { profileData } from "@/data/profile";
+import { getPersonAndWebsiteJsonLd, sanitizeJsonLd } from "@/lib/jsonld";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -27,26 +25,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Person & Website JSON-LD Structured Data
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: profileData.name,
-    jobTitle: profileData.role,
-    url: process.env.NEXT_PUBLIC_SITE_URL || "https://arif-faishal-nugraha.vercel.app",
-    sameAs: [
-      profileData.socialLinks.github,
-      profileData.socialLinks.linkedin,
-    ].filter(Boolean),
-    knowsAbout: [
-      "Software Development",
-      "Frontend Development",
-      "React",
-      "Next.js",
-      "TypeScript",
-      "Flutter",
-    ],
-  };
+  const jsonLd = getPersonAndWebsiteJsonLd();
 
   return (
     <html
@@ -58,7 +37,7 @@ export default function RootLayout({
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: sanitizeJsonLd(jsonLd) }}
         />
       </head>
       <body
@@ -73,14 +52,12 @@ export default function RootLayout({
           <BlackHoleProvider>
             <AccentColorProvider>
               <CommandPaletteProvider>
-                <MatrixRain />
                 <CollapseLayoutWrapper>
                   <Navbar />
-                  <main className="flex-grow px-4 sm:px-6 py-6 pb-28 flex flex-col gap-8">{children}</main>
+                  <main className="flex-grow px-4 sm:px-6 py-6 pb-28 flex flex-col gap-8 print:p-0 print:m-0 print:pb-0 print:gap-0 print:block print:w-full print:max-w-none">{children}</main>
                   <Footer />
                 </CollapseLayoutWrapper>
-                <BlackHoleCollapseOverlay />
-                <TerminalCommandPalette />
+                <LazyOverlays />
               </CommandPaletteProvider>
             </AccentColorProvider>
           </BlackHoleProvider>
@@ -89,5 +66,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-

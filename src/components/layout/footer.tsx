@@ -146,7 +146,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="mt-auto">
+    <footer className="mt-auto print:hidden">
       {/* Floating mini trigger when bar is hidden */}
       <button
         type="button"

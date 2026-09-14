@@ -6,6 +6,7 @@ import { educationData } from "@/data/education";
 import { skillsData } from "@/data/skills";
 import { projectsData } from "@/data/projects";
 import { CvClientView } from "@/components/cv/cv-client-view";
+import { getCvPageJsonLd, sanitizeJsonLd } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
   title: `Curriculum Vitae — ${profileData.name}, S.Kom.`,
@@ -13,13 +14,21 @@ export const metadata: Metadata = {
 };
 
 export default function CvPage() {
+  const jsonLd = getCvPageJsonLd();
+
   return (
-    <CvClientView
-      profile={profileData}
-      experiences={experienceData}
-      education={educationData}
-      skills={skillsData}
-      projects={projectsData}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: sanitizeJsonLd(jsonLd) }}
+      />
+      <CvClientView
+        profile={profileData}
+        experiences={experienceData}
+        education={educationData}
+        skills={skillsData}
+        projects={projectsData}
+      />
+    </>
   );
 }

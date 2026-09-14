@@ -10,7 +10,7 @@ export function Navbar() {
   const { openPalette } = useCommandPalette();
 
   return (
-    <header className="sticky top-0 z-50 bg-[var(--terminal-bg-elevated)] border-b border-[var(--terminal-border)] px-4 py-2.5 flex items-center justify-between backdrop-blur-md">
+    <header className="sticky top-0 z-50 bg-[var(--terminal-bg-elevated)] border-b border-[var(--terminal-border)] px-4 py-2.5 flex items-center justify-between backdrop-blur-md print:hidden">
       {/* Traffic light buttons & Tabs */}
       <div className="flex items-center gap-3">
         <div className="flex gap-1.5 items-center">

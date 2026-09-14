@@ -104,7 +104,7 @@ export function HeroSection() {
             onClick={handleReplay}
             title="Ketik ulang perintah (Replay)"
             aria-label="Ketik ulang perintah cat welcome.txt"
-            className="opacity-50 hover:opacity-100 transition-opacity duration-150 ml-2 text-[10px] text-[var(--terminal-text-dim)] hover:text-[var(--terminal-accent)] border border-[var(--terminal-border)] hover:border-[var(--terminal-accent)] px-1.5 py-0.5 rounded flex items-center gap-1 cursor-pointer select-none"
+            className="opacity-60 hover:opacity-100 transition-opacity duration-150 ml-2 text-[10px] text-[var(--terminal-text-dim)] hover:text-[var(--terminal-accent)] border border-[var(--terminal-border)] hover:border-[var(--terminal-accent)] px-1.5 py-0.5 rounded flex items-center gap-1 cursor-pointer select-none"
           >
             <span>↻</span>
             <span>replay</span>

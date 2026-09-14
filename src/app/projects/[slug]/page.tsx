@@ -7,6 +7,7 @@ import { TerminalCodeBlock } from "@/components/ui/terminal-code-block";
 import { getProjectBySlug, getAllProjectSlugs } from "@/lib/mdx";
 import { projectsData } from "@/data/projects";
 import { generateBaseMetadata } from "@/lib/metadata";
+import { getProjectDetailJsonLd, sanitizeJsonLd } from "@/lib/jsonld";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -43,9 +44,28 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   }
 
   const projectData = projectsData.find((p) => p.slug === slug);
+  const projectInfo = projectData || {
+    slug,
+    title: projectMdx.meta.title,
+    summary: projectMdx.meta.summary,
+    description: projectMdx.meta.summary,
+    category: projectMdx.meta.category || "Software Development",
+    technologies: projectMdx.meta.technologies || [],
+    thumbnail: "",
+    images: [],
+    role: projectMdx.meta.role || "Developer",
+    year: projectMdx.meta.year || 2026,
+    featured: false,
+    status: "completed" as const,
+  };
+  const jsonLd = getProjectDetailJsonLd(projectInfo);
 
   return (
     <div className="flex flex-col gap-4">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: sanitizeJsonLd(jsonLd) }}
+      />
       {/* Command prompt nav */}
       <div className="flex items-baseline flex-wrap gap-0 text-sm font-medium">
         <span className="text-[var(--terminal-accent)] font-semibold">arif</span>

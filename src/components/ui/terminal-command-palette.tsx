@@ -9,6 +9,7 @@ import { useBlackHole } from "@/components/theme/black-hole-context";
 import { profileData } from "@/data/profile";
 import { projectsData } from "@/data/projects";
 import { skillsData } from "@/data/skills";
+import { experienceData } from "@/data/experience";
 import { Terminal, CornerDownLeft, Sparkles, X, Volume2, VolumeX } from "lucide-react";
 import { playKeyClick, playCommandBeep, isSoundEnabled, setSoundEnabled, toggleSound } from "@/lib/sound";
 
@@ -29,17 +30,22 @@ interface CommandInfo {
 const COMMAND_LIST: CommandInfo[] = [
   { command: "help", description: "Menampilkan daftar seluruh perintah CLI", category: "Info" },
   { command: "projects", aliases: ["ls", "proyek"], description: "Lihat daftar proyek & buka bagian proyek", category: "Navigasi" },
+  { command: "grep", aliases: ["find", "search"], description: "Cari teks di proyek, skill, & pengalaman (contoh: grep flutter)", category: "Aksi" },
+  { command: "filter", aliases: ["category"], description: "Filter proyek berdasarkan kategori (contoh: filter ai, filter iot)", category: "Navigasi" },
+  { command: "cat", description: "Baca studi kasus proyek (contoh: cat prd-gene)", category: "Navigasi" },
   { command: "skills", aliases: ["pacman", "keahlian"], description: "Lihat ringkasan keahlian teknis", category: "Navigasi" },
   { command: "about", aliases: ["neofetch", "profil"], description: "Buka bagian tentang & profil pribadi", category: "Navigasi" },
   { command: "experience", aliases: ["git log", "karir"], description: "Buka riwayat karir & pengalaman", category: "Navigasi" },
   { command: "contact", aliases: ["kontak"], description: "Buka formulir kontak interaktif", category: "Navigasi" },
-  { command: "cat", description: "Baca studi kasus proyek (contoh: cat prd-gene)", category: "Navigasi" },
+  { command: "cv", aliases: ["resume"], description: "Buka halaman Curriculum Vitae resmi (PDF)", category: "Aksi" },
+  { command: "print-cv", aliases: ["download-cv"], description: "Buka dan picu dialog print PDF CV langsung", category: "Aksi" },
+  { command: "sysinfo", aliases: ["uname", "specs", "system"], description: "Spesifikasi browser, runtime Next.js 16, & sistem", category: "Info" },
+  { command: "share", aliases: ["copy"], description: "Salin tautan portofolio / kontak ke clipboard", category: "Aksi" },
   { command: "tree", description: "Tampilkan visualisasi pohon struktur portofolio", category: "Info" },
   { command: "curl", aliases: ["fetch"], description: "Ambil data JSON mentah (contoh: curl profile, curl github)", category: "Aksi" },
   { command: "sound", aliases: ["audio"], description: "Toggle efek suara ketikan keyboard mekanik retro", category: "Aksi" },
   { command: "ping", description: "Tes ping latensi jaringan ke host", category: "Info" },
   { command: "theme", description: "Ganti tema tampilan (dark, light, atau toggle)", category: "Aksi" },
-  { command: "cv", aliases: ["resume"], description: "Buka dan unduh Curriculum Vitae (PDF)", category: "Aksi" },
   { command: "stats", aliases: ["gh", "github-stats"], description: "Buka widget GitHub stats & peta kontribusi", category: "Navigasi" },
   { command: "github", description: "Buka profil GitHub Arif Faishal", category: "Aksi" },
   { command: "linkedin", description: "Buka profil LinkedIn Arif Faishal", category: "Aksi" },
@@ -52,6 +58,8 @@ const COMMAND_LIST: CommandInfo[] = [
   { command: "sudo", description: "Mencoba akses administrator sistem", category: "Fun" },
   { command: "exit", aliases: ["quit", "q"], description: "Tutup terminal interaktif (ESC)", category: "Aksi" },
 ];
+
+const SESSION_START_TIME = Date.now();
 
 export function TerminalCommandPalette() {
   const { isOpen, closePalette, isMatrixMode, toggleMatrixMode } =
@@ -625,6 +633,347 @@ export function TerminalCommandPalette() {
         setTimeout(closePalette, 300);
         break;
 
+      case "grep":
+      case "find":
+      case "search": {
+        if (!arg) {
+          isError = true;
+          output = (
+            <div className="flex flex-col gap-1 text-xs">
+              <span className="text-[var(--terminal-rose)] font-semibold">
+                grep: parameter kata kunci dibutuhkan.
+              </span>
+              <span className="text-[var(--terminal-text-dim)] text-[11px]">
+                Contoh: <code className="text-[var(--terminal-cyan)]">grep nextjs</code>, <code className="text-[var(--terminal-cyan)]">grep flutter</code>, <code className="text-[var(--terminal-cyan)]">grep ai</code>, <code className="text-[var(--terminal-cyan)]">grep iot</code>
+              </span>
+            </div>
+          );
+          break;
+        }
+
+        const query = arg.toLowerCase();
+
+        // Search Projects
+        const matchingProjects = projectsData.filter((p) =>
+          p.title.toLowerCase().includes(query) ||
+          p.summary.toLowerCase().includes(query) ||
+          p.description.toLowerCase().includes(query) ||
+          p.category.toLowerCase().includes(query) ||
+          p.technologies.some((t) => t.toLowerCase().includes(query))
+        );
+
+        // Search Skills
+        const matchingSkills = skillsData.filter((s) =>
+          s.name.toLowerCase().includes(query) ||
+          s.category.toLowerCase().includes(query)
+        );
+
+        // Search Experiences
+        const matchingExperiences = experienceData.filter((e) =>
+          e.company.toLowerCase().includes(query) ||
+          e.role.toLowerCase().includes(query) ||
+          e.description.toLowerCase().includes(query) ||
+          e.achievements.some((a) => a.toLowerCase().includes(query)) ||
+          e.technologies.some((t) => t.toLowerCase().includes(query))
+        );
+
+        const totalMatches = matchingProjects.length + matchingSkills.length + matchingExperiences.length;
+
+        if (totalMatches === 0) {
+          output = (
+            <div className="flex flex-col gap-1 text-xs">
+              <span className="text-[var(--terminal-amber)]">
+                grep: tidak ditemukan hasil untuk &apos;<span className="text-[var(--terminal-text-bright)] font-bold">{arg}</span>&apos;.
+              </span>
+              <span className="text-[var(--terminal-text-dim)] text-[11px]">
+                Coba gunakan kata kunci umum seperti: <code className="text-[var(--terminal-cyan)]">react</code>, <code className="text-[var(--terminal-cyan)]">flutter</code>, <code className="text-[var(--terminal-cyan)]">next</code>, <code className="text-[var(--terminal-cyan)]">typescript</code>, <code className="text-[var(--terminal-cyan)]">iot</code>, <code className="text-[var(--terminal-cyan)]">ai</code>.
+              </span>
+            </div>
+          );
+        } else {
+          output = (
+            <div className="flex flex-col gap-2.5 text-xs py-1">
+              <div className="flex items-center justify-between border-b border-[var(--terminal-border)] pb-1">
+                <span className="text-[var(--terminal-accent)] font-semibold">
+                  Hasil pencarian grep: &apos;<span className="text-[var(--terminal-text-bright)] underline">{arg}</span>&apos;
+                </span>
+                <span className="text-[var(--terminal-text-dim)] text-[10px]">
+                  {totalMatches} match{totalMatches > 1 ? "es" : ""} ditemukan
+                </span>
+              </div>
+
+              {matchingProjects.length > 0 && (
+                <div className="flex flex-col gap-1">
+                  <span className="text-[var(--terminal-cyan)] font-bold text-[11px]">
+                    ~/data/projects.ts ({matchingProjects.length} entri):
+                  </span>
+                  <div className="flex flex-col gap-1.5 pl-2 border-l border-[var(--terminal-border)]">
+                    {matchingProjects.map((p) => (
+                      <div key={p.slug} className="flex flex-col gap-0.5">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[var(--terminal-text-bright)] font-semibold">{p.title}</span>
+                          <span className="text-[10px] text-[var(--terminal-purple)]">[{p.category}]</span>
+                        </div>
+                        <p className="text-[11px] text-[var(--terminal-text-dim)] line-clamp-1">{p.summary}</p>
+                        <div className="flex items-center gap-2 text-[10px] text-[var(--terminal-blue)]">
+                          <span>Tech: {p.technologies.join(", ")}</span>
+                          <button
+                            onClick={() => {
+                              router.push(`/projects/${p.slug}`);
+                              closePalette();
+                            }}
+                            className="text-[var(--terminal-accent)] hover:underline ml-auto cursor-pointer"
+                          >
+                            [Buka Proyek →]
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {matchingSkills.length > 0 && (
+                <div className="flex flex-col gap-1">
+                  <span className="text-[var(--terminal-purple)] font-bold text-[11px]">
+                    ~/data/skills.ts ({matchingSkills.length} keahlian):
+                  </span>
+                  <div className="flex flex-wrap gap-1 pl-2 border-l border-[var(--terminal-border)]">
+                    {matchingSkills.map((s) => (
+                      <span
+                        key={s.name}
+                        className="bg-[var(--terminal-bg-panel)] border border-[var(--terminal-border)] text-[var(--terminal-text-bright)] px-1.5 py-0.5 rounded text-[10px]"
+                      >
+                        {s.name} <span className="text-[var(--terminal-text-dim)]">({s.category})</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {matchingExperiences.length > 0 && (
+                <div className="flex flex-col gap-1">
+                  <span className="text-[var(--terminal-amber)] font-bold text-[11px]">
+                    ~/data/experience.ts ({matchingExperiences.length} pengalaman):
+                  </span>
+                  <div className="flex flex-col gap-1 pl-2 border-l border-[var(--terminal-border)]">
+                    {matchingExperiences.map((e, idx) => (
+                      <div key={idx} className="flex flex-col gap-0.5">
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-[var(--terminal-text-bright)] font-semibold">{e.company}</span>
+                          <span className="text-[var(--terminal-text-dim)] text-[10px]">({e.role})</span>
+                          <span className="text-[var(--terminal-accent)] text-[10px] ml-auto">{e.startDate} - {e.endDate}</span>
+                        </div>
+                        <div className="text-[10px] text-[var(--terminal-text-dim)]">
+                          Stack: {e.technologies.join(", ")}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        }
+        break;
+      }
+
+      case "filter":
+      case "category": {
+        if (!arg) {
+          const categories = Array.from(new Set(projectsData.map((p) => p.category)));
+          output = (
+            <div className="flex flex-col gap-1.5 text-xs">
+              <span className="text-[var(--terminal-accent)] font-semibold">
+                Kategori proyek yang tersedia:
+              </span>
+              <div className="flex flex-wrap gap-1.5 pl-2 border-l border-[var(--terminal-border)]">
+                <span className="text-[var(--terminal-cyan)] font-mono">all</span>
+                {categories.map((c) => (
+                  <span key={c} className="text-[var(--terminal-purple)] font-mono">
+                    {c.toLowerCase()}
+                  </span>
+                ))}
+              </div>
+              <span className="text-[var(--terminal-text-dim)] text-[11px]">
+                Ketik: <code className="text-[var(--terminal-cyan)]">filter ai</code> atau <code className="text-[var(--terminal-cyan)]">filter iot</code>
+              </span>
+            </div>
+          );
+        } else {
+          const catQuery = arg.toLowerCase();
+          const filtered = catQuery === "all" || catQuery === "semua"
+            ? projectsData
+            : projectsData.filter((p) => p.category.toLowerCase().includes(catQuery));
+
+          if (filtered.length === 0) {
+            output = (
+              <span className="text-[var(--terminal-amber)] text-xs">
+                filter: tidak ada proyek dengan kategori &apos;{arg}&apos;. Ketik &apos;filter&apos; tanpa argumen untuk melihat daftar kategori.
+              </span>
+            );
+          } else {
+            output = (
+              <div className="flex flex-col gap-1.5 text-xs">
+                <span className="text-[var(--terminal-green)]">
+                  → Menemukan {filtered.length} proyek kategori &apos;{arg}&apos;:
+                </span>
+                <div className="flex flex-col gap-1 pl-2 border-l border-[var(--terminal-border)]">
+                  {filtered.map((p) => (
+                    <div key={p.slug} className="flex items-baseline gap-2">
+                      <span className="text-[var(--terminal-cyan)] font-bold">{p.slug}</span>
+                      <span className="text-[var(--terminal-text-bright)]">— {p.title}</span>
+                      <span className="text-[var(--terminal-purple)] text-[10px]">[{p.category}]</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+            navigateToSection("#projects");
+          }
+        }
+        break;
+      }
+
+      case "sysinfo":
+      case "uname":
+      case "specs":
+      case "system": {
+        const platform = typeof window !== "undefined"
+          ? navigator.platform || "Darwin / macOS (Web Architecture)"
+          : "Server runtime";
+        const screenRes = typeof window !== "undefined"
+          ? `${window.innerWidth}×${window.innerHeight} (${window.devicePixelRatio || 1}x DPR)`
+          : "1920x1080";
+        const isOnline = typeof window !== "undefined" ? navigator.onLine : true;
+        const memoryStr = typeof performance !== "undefined" && (performance as unknown as { memory?: { usedJSHeapSize: number } })?.memory
+          ? `${Math.round((performance as unknown as { memory: { usedJSHeapSize: number } }).memory.usedJSHeapSize / (1024 * 1024))} MB (Active JS Heap)`
+          : "V8 Sandbox Managed";
+        const uptimeSec = Math.floor((Date.now() - SESSION_START_TIME) / 1000);
+
+        output = (
+          <div className="flex flex-col gap-2 text-xs font-mono py-1">
+            <div className="flex items-center gap-2 border-b border-[var(--terminal-border)] pb-1.5">
+              <Terminal className="w-4 h-4 text-[var(--terminal-accent)]" />
+              <span className="text-[var(--terminal-accent)] font-bold">SYSTEM SPECIFICATION REPORT</span>
+              <span className="text-[10px] text-[var(--terminal-text-dim)] ml-auto">
+                Next.js 16.2 Turbopack
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-[11px]">
+              <div>
+                <span className="text-[var(--terminal-text-dim)]">Host:</span>{" "}
+                <span className="text-[var(--terminal-text-bright)]">{profileData.name}</span>
+              </div>
+              <div>
+                <span className="text-[var(--terminal-text-dim)]">OS / Platform:</span>{" "}
+                <span className="text-[var(--terminal-cyan)]">{platform}</span>
+              </div>
+              <div>
+                <span className="text-[var(--terminal-text-dim)]">Framework:</span>{" "}
+                <span className="text-[var(--terminal-green)]">Next.js 16.2.11 (App Router)</span>
+              </div>
+              <div>
+                <span className="text-[var(--terminal-text-dim)]">Engine &amp; Style:</span>{" "}
+                <span className="text-[var(--terminal-green)]">React 19.2 + Tailwind v4</span>
+              </div>
+              <div>
+                <span className="text-[var(--terminal-text-dim)]">Viewport:</span>{" "}
+                <span className="text-[var(--terminal-amber)]">{screenRes}</span>
+              </div>
+              <div>
+                <span className="text-[var(--terminal-text-dim)]">Network:</span>{" "}
+                <span className={isOnline ? "text-[var(--terminal-green)]" : "text-[var(--terminal-rose)]"}>
+                  {isOnline ? "● Online (HTTP/2 - TLS 1.3)" : "○ Offline"}
+                </span>
+              </div>
+              <div>
+                <span className="text-[var(--terminal-text-dim)]">Theme:</span>{" "}
+                <span className="text-[var(--terminal-purple)] capitalize">
+                  {resolvedTheme || theme || "dark"} mode
+                </span>
+              </div>
+              <div>
+                <span className="text-[var(--terminal-text-dim)]">Session Uptime:</span>{" "}
+                <span className="text-[var(--terminal-text-bright)]">{uptimeSec}s</span>
+              </div>
+              <div>
+                <span className="text-[var(--terminal-text-dim)]">Memory Footprint:</span>{" "}
+                <span className="text-[var(--terminal-blue)]">{memoryStr}</span>
+              </div>
+              <div>
+                <span className="text-[var(--terminal-text-dim)]">Structured SEO:</span>{" "}
+                <span className="text-[var(--terminal-accent)]">JSON-LD Breadcrumb &amp; WebSite</span>
+              </div>
+            </div>
+          </div>
+        );
+        break;
+      }
+
+      case "share":
+      case "copy": {
+        const origin = typeof window !== "undefined" ? window.location.origin : "https://arif-faishal-nugraha.vercel.app";
+        let textToCopy = origin;
+        let label = "URL Portofolio";
+
+        if (arg === "email" || arg === "mail") {
+          textToCopy = profileData.email;
+          label = "Alamat Email";
+        } else if (arg === "github" || arg === "gh") {
+          textToCopy = profileData.socialLinks.github || "https://github.com/ariffaishal1";
+          label = "Tautan GitHub";
+        } else if (arg === "linkedin") {
+          textToCopy = profileData.socialLinks.linkedin || "https://linkedin.com";
+          label = "Tautan LinkedIn";
+        } else if (arg === "cv" || arg === "resume") {
+          textToCopy = `${origin}/cv`;
+          label = "Tautan Curriculum Vitae";
+        }
+
+        if (typeof navigator !== "undefined" && navigator.clipboard) {
+          navigator.clipboard.writeText(textToCopy).catch(() => {});
+        }
+
+        output = (
+          <div className="flex flex-col gap-1 text-xs">
+            <span className="text-[var(--terminal-green)] font-semibold">
+              [✓] {label} berhasil disalin ke clipboard!
+            </span>
+            <div className="bg-[var(--terminal-bg-panel)] p-1.5 rounded border border-[var(--terminal-border)] text-[var(--terminal-cyan)] font-mono text-[11px] select-all">
+              {textToCopy}
+            </div>
+            <span className="text-[var(--terminal-text-dim)] text-[10px]">
+              Tautan kini siap ditempel (Ctrl+V / Cmd+V) dan dibagikan.
+            </span>
+          </div>
+        );
+        break;
+      }
+
+      case "print-cv":
+      case "download-cv": {
+        output = (
+          <div className="flex flex-col gap-1 text-xs">
+            <span className="text-[var(--terminal-green)] font-semibold">
+              → Menyiapkan Curriculum Vitae &amp; membuka dialog cetak...
+            </span>
+            <span className="text-[var(--terminal-text-dim)] text-[11px]">
+              Mengarahkan ke halaman CV resmi Arif Faishal (A4 ATS-compliant)...
+            </span>
+          </div>
+        );
+        router.push("/cv");
+        setTimeout(() => {
+          closePalette();
+          if (typeof window !== "undefined") {
+            window.print();
+          }
+        }, 600);
+        break;
+      }
+
       default:
         isError = true;
         output = (
@@ -702,9 +1051,11 @@ export function TerminalCommandPalette() {
     : [
         COMMAND_LIST.find((c) => c.command === "help")!,
         COMMAND_LIST.find((c) => c.command === "projects")!,
-        COMMAND_LIST.find((c) => c.command === "skills")!,
+        COMMAND_LIST.find((c) => c.command === "grep")!,
+        COMMAND_LIST.find((c) => c.command === "sysinfo")!,
         COMMAND_LIST.find((c) => c.command === "theme")!,
         COMMAND_LIST.find((c) => c.command === "cv")!,
+        COMMAND_LIST.find((c) => c.command === "share")!,
       ].filter(Boolean);
 
   return (
@@ -844,7 +1195,7 @@ export function TerminalCommandPalette() {
               <Sparkles className="w-3 h-3 text-[var(--terminal-amber)]" />
               Saran:
             </span>
-            {suggestions.slice(0, 5).map((s) => (
+            {suggestions.slice(0, 7).map((s) => (
               <button
                 key={s.command}
                 onClick={() => {

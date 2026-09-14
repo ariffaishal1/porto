@@ -39,7 +39,7 @@
   --terminal-bg-panel: #1a1e2a;
   --terminal-bg-selection: #2a3040;
   --terminal-text: #c5cad3;
-  --terminal-text-dim: #6b7280;
+  --terminal-text-dim: #8b929e;
   --terminal-text-bright: #e8ecf2;
   --terminal-accent: #22d3a7;
   --terminal-accent-dim: rgba(34, 211, 167, 0.15);
@@ -359,18 +359,101 @@ body {
 
 @media print {
   @page {
-    margin: 12mm 15mm;
+    margin: 18mm 20mm;
     size: A4 portrait;
   }
+
+  /* NUCLEAR RESET: Remove ALL visual artifacts from every single element */
+  *,
+  *::before,
+  *::after {
+    border: 0 none transparent !important;
+    border-width: 0 !important;
+    border-style: none !important;
+    border-color: transparent !important;
+    border-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+    outline: 0 none transparent !important;
+    outline-offset: 0 !important;
+    -webkit-box-decoration-break: clone !important;
+    box-decoration-break: clone !important;
+  }
+
+  /* Force hide all website shell elements, fixed triggers, and navigation */
+  header:not(.cv-header),
+  footer:not(.cv-document-footer),
+  nav,
+  button,
+  .fixed,
+  .print-hidden,
+  [aria-label="Terminal Navigation Shortcuts"] {
+    display: none !important;
+  }
+
+  html,
   body {
     background: #ffffff !important;
     color: #000000 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    font-size: 10.5pt;
+    line-height: 1.4;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    min-height: 0 !important;
   }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    display: block !important;
+  }
+
+  article {
+    background: transparent !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* ── Selectively RE-APPLY only the intentional print borders ── */
+
+  /* Section heading dividers (border-bottom) */
+  article h2 {
+    border-bottom: 1px solid #1f2937 !important;
+  }
+
+  /* CV header bottom divider */
+  article header.cv-header {
+    border-bottom: 1px solid #1f2937 !important;
+  }
+
+  /* CV footer top divider */
+  article footer.cv-document-footer {
+    border-top: 1px solid #9ca3af !important;
+  }
+
   .page-break-avoid {
-    break-inside: avoid;
-    page-break-inside: avoid;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .page-break-before {
+    break-before: page !important;
+    page-break-before: always !important;
+  }
+
+  /* Clean print links without browser color artifacts */
+  a {
+    text-decoration: none !important;
+    color: inherit !important;
   }
 }
 
