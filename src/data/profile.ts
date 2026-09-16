@@ -1,6 +1,7 @@
 import { Profile } from "@/types/profile";
+import type { Language } from "@/lib/i18n/dictionaries";
 
-export const profileData: Profile = {
+export const profileDataId: Profile = {
   name: "Arif Faishal Nugraha",
   shortName: "Arif",
   role: "Software Engineer",
@@ -21,3 +22,32 @@ export const profileData: Profile = {
     linkedin: "https://www.linkedin.com/in/arif-faishal-nugraha/",
   },
 };
+
+export const profileDataEn: Profile = {
+  name: "Arif Faishal Nugraha",
+  shortName: "Arif",
+  role: "Software Engineer",
+  headline: "Architecting and engineering resilient, fast, and multiplatform Web, Mobile, and Desktop software integrated with modern technologies.",
+  shortBio: "Software Engineer specializing in multiplatform systems (Web, Mobile, Desktop) and AI integration. Dedicated to clean architecture, high performance, and impactful real-world solutions.",
+  fullBio: [
+    "I am a Software Engineer dedicated to building cross-platform software solutions — from responsive Web applications and intuitive Mobile apps to functional AI/LLM integrations.",
+    "My core focus centers around Next.js, React, TypeScript, Flutter, and AI ecosystems. I prioritize clean, modular, and maintainable architecture paired with seamless user experiences.",
+    "Open to contributing to high-standard engineering teams and collaborating on innovative digital products from discovery to production release."
+  ],
+  location: "Majalengka, West Java, Indonesia",
+  availability: "Open for Opportunities & Freelance",
+  email: "ariffaishal1@gmail.com",
+  avatar: "/profile.jpg",
+  resumeUrl: "/cv",
+  socialLinks: {
+    github: "https://github.com/ariffaishal1",
+    linkedin: "https://www.linkedin.com/in/arif-faishal-nugraha/",
+  },
+};
+
+// Default export for backward compatibility
+export const profileData = profileDataId;
+
+export function getProfileData(lang: Language): Profile {
+  return lang === "en" ? profileDataEn : profileDataId;
+}

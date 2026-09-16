@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import "@/app/globals.css";
+import { LanguageProvider } from "@/components/theme/language-context";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { AccentColorProvider } from "@/components/theme/accent-color-context";
 import { CommandPaletteProvider } from "@/components/layout/command-palette-context";
@@ -49,18 +50,20 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <BlackHoleProvider>
-            <AccentColorProvider>
-              <CommandPaletteProvider>
-                <CollapseLayoutWrapper>
-                  <Navbar />
-                  <main className="flex-grow px-4 sm:px-6 py-6 pb-28 flex flex-col gap-8 print:p-0 print:m-0 print:pb-0 print:gap-0 print:block print:w-full print:max-w-none">{children}</main>
-                  <Footer />
-                </CollapseLayoutWrapper>
-                <LazyOverlays />
-              </CommandPaletteProvider>
-            </AccentColorProvider>
-          </BlackHoleProvider>
+          <LanguageProvider>
+            <BlackHoleProvider>
+              <AccentColorProvider>
+                <CommandPaletteProvider>
+                  <CollapseLayoutWrapper>
+                    <Navbar />
+                    <main className="flex-grow px-4 sm:px-6 py-6 pb-28 flex flex-col gap-8 print:p-0 print:m-0 print:pb-0 print:gap-0 print:block print:w-full print:max-w-none">{children}</main>
+                    <Footer />
+                  </CollapseLayoutWrapper>
+                  <LazyOverlays />
+                </CommandPaletteProvider>
+              </AccentColorProvider>
+            </BlackHoleProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

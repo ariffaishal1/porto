@@ -1,6 +1,9 @@
+"use client";
+
 import React from "react";
 import { skillsData } from "@/data/skills";
 import { SkillCategory } from "@/types/skill";
+import { useLanguage } from "@/components/theme/language-context";
 
 const categories: SkillCategory[] = [
   "Frontend",
@@ -13,7 +16,29 @@ const categories: SkillCategory[] = [
 ];
 
 export function SkillsSection() {
+  const { language, t } = useLanguage();
   const featuredCount = skillsData.filter((s) => s.featured).length;
+
+  const getCategoryLabel = (category: SkillCategory): string => {
+    switch (category) {
+      case "Frontend":
+        return t.skills.categoryFrontend;
+      case "Backend":
+        return t.skills.categoryBackend;
+      case "Mobile":
+        return t.skills.categoryMobile;
+      case "Database":
+        return t.skills.categoryDatabase;
+      case "AI":
+        return t.skills.categoryAI;
+      case "Tools":
+        return t.skills.categoryTools;
+      case "Concepts":
+        return t.skills.categoryConcepts;
+      default:
+        return category;
+    }
+  };
 
   return (
     <section id="skills" className="flex flex-col gap-2 pt-4 border-t border-[var(--terminal-border)]">
@@ -29,7 +54,9 @@ export function SkillsSection() {
       </div>
 
       <div className="text-xs text-[var(--terminal-text-dim)] pt-1">
-        :: Querying installed packages and skills database...
+        {language === "en"
+          ? ":: Querying installed packages and skills database..."
+          : ":: Mengkueri paket terpasang dan basis data keahlian..."}
       </div>
 
       {/* Skills Grid */}
@@ -43,7 +70,7 @@ export function SkillsSection() {
           return (
             <div key={category} className="flex flex-col gap-1">
               <div className="text-[var(--terminal-blue)] font-bold text-xs mt-2 select-none">
-                ## {category}
+                ## {getCategoryLabel(category)}
               </div>
               <div className="flex flex-col divide-y divide-[var(--terminal-border)]/40">
                 {categorySkills.map((skill) => (
@@ -55,7 +82,7 @@ export function SkillsSection() {
                       {skill.name}
                     </span>
                     {skill.featured ? (
-                      <span className="text-[var(--terminal-amber)] font-bold" title="Featured skill">
+                      <span className="text-[var(--terminal-amber)] font-bold" title={t.skills.featuredBadge}>
                         ★
                       </span>
                     ) : (
@@ -72,8 +99,8 @@ export function SkillsSection() {
       </div>
 
       <div className="text-xs text-[var(--terminal-text-dim)] mt-3">
-        Total: {skillsData.length} packages &nbsp;|&nbsp;{" "}
-        <span className="text-[var(--terminal-amber)]">★</span> = featured ({featuredCount})
+        Total: {skillsData.length} {language === "en" ? "packages" : "paket"} &nbsp;|&nbsp;{" "}
+        <span className="text-[var(--terminal-amber)]">★</span> = {t.skills.featuredBadge.toLowerCase()} ({featuredCount})
       </div>
     </section>
   );

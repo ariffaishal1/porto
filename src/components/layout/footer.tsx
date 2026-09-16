@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { useLanguage } from "@/components/theme/language-context";
 
 interface NavShortcut {
   key: string;
@@ -10,22 +11,26 @@ interface NavShortcut {
   href: string;
 }
 
-const navShortcuts: NavShortcut[] = [
-  { key: "F1", numKey: "1", label: "Beranda", href: "#hero" },
-  { key: "F2", numKey: "2", label: "Tentang", href: "#about" },
-  { key: "F3", numKey: "3", label: "Keahlian", href: "#skills" },
-  { key: "F4", numKey: "4", label: "Proyek", href: "#projects" },
-  { key: "F5", numKey: "5", label: "GitHub", href: "#github" },
-  { key: "F6", numKey: "6", label: "Pengalaman", href: "#experience" },
-  { key: "F7", numKey: "7", label: "Kontak", href: "#contact" },
-];
-
 export function Footer() {
   const router = useRouter();
   const pathname = usePathname();
+  const { language } = useLanguage();
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(true);
   const lastScrollY = useRef(0);
+
+  const navShortcuts: NavShortcut[] = useMemo(
+    () => [
+      { key: "F1", numKey: "1", label: language === "en" ? "Home" : "Beranda", href: "#hero" },
+      { key: "F2", numKey: "2", label: language === "en" ? "About" : "Tentang", href: "#about" },
+      { key: "F3", numKey: "3", label: language === "en" ? "Skills" : "Keahlian", href: "#skills" },
+      { key: "F4", numKey: "4", label: language === "en" ? "Projects" : "Proyek", href: "#projects" },
+      { key: "F5", numKey: "5", label: "GitHub", href: "#github" },
+      { key: "F6", numKey: "6", label: language === "en" ? "Experience" : "Pengalaman", href: "#experience" },
+      { key: "F7", numKey: "7", label: language === "en" ? "Contact" : "Kontak", href: "#contact" },
+    ],
+    [language]
+  );
 
   const navigateToSection = useCallback(
     (href: string, keyName?: string) => {
@@ -134,7 +139,7 @@ export function Footer() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [navigateToSection]);
+  }, [navigateToSection, navShortcuts]);
 
   const handleClick = (
     e: React.MouseEvent<HTMLAnchorElement>,

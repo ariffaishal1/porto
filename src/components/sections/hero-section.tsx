@@ -1,12 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { profileData } from "@/data/profile";
+import { getProfileData } from "@/data/profile";
+import { useLanguage } from "@/components/theme/language-context";
 
 const FULL_CMD = "cat welcome.txt";
 const CAT_LENGTH = 3;
 
 export function HeroSection() {
+  const { language, t } = useLanguage();
+  const profile = getProfileData(language);
   const [displayedText, setDisplayedText] = useState("");
   const [isOutputVisible, setIsOutputVisible] = useState(false);
   const [isTypingDone, setIsTypingDone] = useState(false);
@@ -102,12 +105,12 @@ export function HeroSection() {
           <button
             type="button"
             onClick={handleReplay}
-            title="Ketik ulang perintah (Replay)"
+            title={language === "en" ? "Replay command" : "Ketik ulang perintah (Replay)"}
             aria-label="Ketik ulang perintah cat welcome.txt"
             className="opacity-60 hover:opacity-100 transition-opacity duration-150 ml-2 text-[10px] text-[var(--terminal-text-dim)] hover:text-[var(--terminal-accent)] border border-[var(--terminal-border)] hover:border-[var(--terminal-accent)] px-1.5 py-0.5 rounded flex items-center gap-1 cursor-pointer select-none"
           >
             <span>↻</span>
-            <span>replay</span>
+            <span>{t.hero.replay}</span>
           </button>
         )}
       </div>
@@ -130,13 +133,13 @@ export function HeroSection() {
         </pre>
 
         <div className="text-[13.5px] leading-relaxed text-[var(--terminal-text)]">
-          Halo! Saya{" "}
+          {language === "en" ? "Hello! I'm " : "Halo! Saya "}
           <span className="text-[var(--terminal-accent)] font-semibold">
-            {profileData.name}
+            {profile.name}
           </span>{" "}
-          — {profileData.role}.
+          — {profile.role}.
           <br />
-          {profileData.headline}
+          {profile.headline}
         </div>
 
         <div className="text-xs text-[var(--terminal-text-dim)] italic">

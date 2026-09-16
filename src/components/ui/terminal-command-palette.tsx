@@ -6,6 +6,7 @@ import { useTheme } from "next-themes";
 import { useCommandPalette } from "@/components/layout/command-palette-context";
 import { useAccentColor, ACCENT_COLORS } from "@/components/theme/accent-color-context";
 import { useBlackHole } from "@/components/theme/black-hole-context";
+import { useLanguage } from "@/components/theme/language-context";
 import { profileData } from "@/data/profile";
 import { projectsData } from "@/data/projects";
 import { skillsData } from "@/data/skills";
@@ -29,6 +30,7 @@ interface CommandInfo {
 
 const COMMAND_LIST: CommandInfo[] = [
   { command: "help", description: "Menampilkan daftar seluruh perintah CLI", category: "Info" },
+  { command: "lang", aliases: ["language", "bahasa"], description: "Ganti bahasa antarmuka (contoh: lang en, lang id)", category: "Aksi" },
   { command: "projects", aliases: ["ls", "proyek"], description: "Lihat daftar proyek & buka bagian proyek", category: "Navigasi" },
   { command: "grep", aliases: ["find", "search"], description: "Cari teks di proyek, skill, & pengalaman (contoh: grep flutter)", category: "Aksi" },
   { command: "filter", aliases: ["category"], description: "Filter proyek berdasarkan kategori (contoh: filter ai, filter iot)", category: "Navigasi" },
@@ -91,6 +93,7 @@ export function TerminalCommandPalette() {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const { setAccentColor } = useAccentColor();
   const { triggerCollapse } = useBlackHole();
+  const { language, setLanguage } = useLanguage();
 
   // Focus input whenever palette is opened
   useEffect(() => {
@@ -372,6 +375,47 @@ export function TerminalCommandPalette() {
               <span className="text-[var(--terminal-text-dim)] text-[11px]">
                 Endpoint yang tersedia: <code className="text-[var(--terminal-cyan)]">curl profile</code>, <code className="text-[var(--terminal-cyan)]">curl projects</code>, <code className="text-[var(--terminal-cyan)]">curl skills</code>, <code className="text-[var(--terminal-cyan)]">curl github</code>
               </span>
+            </div>
+          );
+        }
+        break;
+      }
+
+      case "lang":
+      case "language":
+      case "bahasa": {
+        const target = arg?.toLowerCase();
+        if (target === "en" || target === "english" || target === "inggris") {
+          setLanguage("en");
+          output = (
+            <div className="flex items-center gap-2 text-xs font-mono">
+              <span className="text-[var(--terminal-green)]">✓ Interface language changed to English (EN)</span>
+            </div>
+          );
+        } else if (target === "id" || target === "indonesia" || target === "indo") {
+          setLanguage("id");
+          output = (
+            <div className="flex items-center gap-2 text-xs font-mono">
+              <span className="text-[var(--terminal-green)]">✓ Bahasa antarmuka diubah ke Bahasa Indonesia (ID)</span>
+            </div>
+          );
+        } else if (!target) {
+          output = (
+            <div className="flex flex-col gap-1 text-xs font-mono">
+              <span className="text-[var(--terminal-accent)]">
+                {language === "en" ? "Current language: English (en)" : "Bahasa aktif saat ini: Bahasa Indonesia (id)"}
+              </span>
+              <span className="text-[var(--terminal-text-dim)]">
+                {language === "en" ? "Usage: lang [en|id]" : "Penggunaan: lang [id|en]"}
+              </span>
+            </div>
+          );
+        } else {
+          output = (
+            <div className="text-xs font-mono text-[var(--terminal-rose)]">
+              {language === "en"
+                ? `Unknown language "${arg}". Supported: "id", "en"`
+                : `Bahasa "${arg}" tidak dikenal. Opsi yang didukung: "id", "en"`}
             </div>
           );
         }

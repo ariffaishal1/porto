@@ -2,6 +2,7 @@
 
 import React, { useState, useId } from "react";
 import { profileData } from "@/data/profile";
+import { useLanguage } from "@/components/theme/language-context";
 
 interface RepoItem {
   name: string;
@@ -89,6 +90,7 @@ function generateContributionWeeks() {
 const CONTRIBUTION_WEEKS = generateContributionWeeks();
 
 export function GithubStatsSection() {
+  const { language } = useLanguage();
   const [repos, setRepos] = useState<RepoItem[]>(TOP_REPOS);
   const [repoCount, setRepoCount] = useState(6);
   const [syncStatus, setSyncStatus] = useState<"idle" | "syncing" | "synced">("idle");
@@ -215,7 +217,7 @@ export function GithubStatsSection() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 border-b border-[var(--terminal-border)]/60 pb-3 text-xs">
           <div className="flex flex-col gap-0.5">
             <span className="text-[var(--terminal-text-dim)] text-[10px] uppercase tracking-wider">
-              Akun GitHub
+              {language === "en" ? "GitHub Account" : "Akun GitHub"}
             </span>
             <span className="text-[var(--terminal-accent)] font-semibold font-mono">
               @ariffaishal1
@@ -224,25 +226,25 @@ export function GithubStatsSection() {
 
           <div className="flex flex-col gap-0.5">
             <span className="text-[var(--terminal-text-dim)] text-[10px] uppercase tracking-wider">
-              Public Repos
+              {language === "en" ? "Public Repos" : "Repositori Publik"}
             </span>
             <span className="text-[var(--terminal-green)] font-bold font-mono">
-              {repoCount} Repositories
+              {repoCount} {language === "en" ? "Repositories" : "Repositori"}
             </span>
           </div>
 
           <div className="flex flex-col gap-0.5">
             <span className="text-[var(--terminal-text-dim)] text-[10px] uppercase tracking-wider">
-              Member Sejak
+              {language === "en" ? "Member Since" : "Member Sejak"}
             </span>
             <span className="text-[var(--terminal-amber)] font-mono">
-              Januari 2018 (8+ thn)
+              {language === "en" ? "January 2018 (8+ yrs)" : "Januari 2018 (8+ thn)"}
             </span>
           </div>
 
           <div className="flex flex-col gap-0.5">
             <span className="text-[var(--terminal-text-dim)] text-[10px] uppercase tracking-wider">
-              Aktivitas Terakhir
+              {language === "en" ? "Latest Activity" : "Aktivitas Terakhir"}
             </span>
             <span className="text-[var(--terminal-cyan)] font-mono truncate">
               porto (refs/heads/main)
@@ -257,7 +259,7 @@ export function GithubStatsSection() {
             <div className="flex items-center justify-between text-xs">
               <span className="text-[var(--terminal-text-bright)] font-semibold flex items-center gap-1.5">
                 <span>■</span>
-                <span>Peta Kontribusi (24 Minggu Terakhir)</span>
+                <span>{language === "en" ? "Contribution Heatmap (Past 24 Weeks)" : "Peta Kontribusi (24 Minggu Terakhir)"}</span>
               </span>
 
               {/* Hover status display */}
@@ -265,12 +267,14 @@ export function GithubStatsSection() {
                 {hoveredDay ? (
                   <span>
                     <strong className="text-[var(--terminal-accent)]">
-                      {hoveredDay.count} kontribusi
+                      {hoveredDay.count} {language === "en" ? "contributions" : "kontribusi"}
                     </strong>{" "}
-                    pada {hoveredDay.date}
+                    {language === "en" ? "on" : "pada"} {hoveredDay.date}
                   </span>
                 ) : (
-                  <span className="opacity-75">Arahkan kursor pada kotak untuk detail</span>
+                  <span className="opacity-75">
+                    {language === "en" ? "Hover over squares for details" : "Arahkan kursor pada kotak untuk detail"}
+                  </span>
                 )}
               </span>
             </div>

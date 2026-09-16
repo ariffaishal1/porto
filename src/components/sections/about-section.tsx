@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { profileData } from "@/data/profile";
+import { getProfileData } from "@/data/profile";
+import { useLanguage } from "@/components/theme/language-context";
 import { AsciiBlackHole } from "@/components/ui/ascii-black-hole";
 import { useAccentColor } from "@/components/theme/accent-color-context";
 import { useBlackHole } from "@/components/theme/black-hole-context";
@@ -9,6 +10,8 @@ import { useBlackHole } from "@/components/theme/black-hole-context";
 export function AboutSection() {
   const { setAccentColor, colors } = useAccentColor();
   const { triggerCollapse, collapseState } = useBlackHole();
+  const { language, t } = useLanguage();
+  const profile = getProfileData(language);
 
   return (
     <section id="about" className="flex flex-col gap-2 pt-4 border-t border-[var(--terminal-border)]">
@@ -27,6 +30,7 @@ export function AboutSection() {
         <div
           onClick={triggerCollapse}
           className="flex items-center justify-start min-w-[240px] cursor-pointer group transition-transform duration-200 hover:scale-[1.02] active:scale-95"
+          title={t.about.easterEggTooltip}
         >
           <AsciiBlackHole
             isHyperSpin={collapseState === "warning" || collapseState === "sucking"}
@@ -44,47 +48,49 @@ export function AboutSection() {
 
           <div>
             <span className="text-[var(--terminal-accent)] font-semibold">Name:</span>{" "}
-            <span className="text-[var(--terminal-text-bright)]">{profileData.name}</span>
+            <span className="text-[var(--terminal-text-bright)]">{profile.name}</span>
           </div>
 
           <div>
-            <span className="text-[var(--terminal-accent)] font-semibold">Role:</span>{" "}
-            <span className="text-[var(--terminal-text)]">{profileData.role}</span>
+            <span className="text-[var(--terminal-accent)] font-semibold">{t.about.roleLabel}:</span>{" "}
+            <span className="text-[var(--terminal-text)]">{profile.role}</span>
           </div>
 
           <div>
             <span className="text-[var(--terminal-accent)] font-semibold">Education:</span>{" "}
             <span className="text-[var(--terminal-text)]">
-              S1 Informatika (Univ. Widyatama, 2025) &bull; D3 Teknik Komputer (Telkom Univ, 2022)
+              {language === "en"
+                ? "B.S. Informatics (Widyatama Univ, 2025) • A.S. Computer Engineering (Telkom Univ, 2022)"
+                : "S1 Informatika (Univ. Widyatama, 2025) • D3 Teknik Komputer (Telkom Univ, 2022)"}
             </span>
           </div>
 
           <div>
-            <span className="text-[var(--terminal-accent)] font-semibold">Location:</span>{" "}
-            <span className="text-[var(--terminal-text)]">{profileData.location}</span>
+            <span className="text-[var(--terminal-accent)] font-semibold">{t.about.locationLabel}:</span>{" "}
+            <span className="text-[var(--terminal-text)]">{profile.location}</span>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-[var(--terminal-accent)] font-semibold">Status:</span>{" "}
+            <span className="text-[var(--terminal-accent)] font-semibold">{t.about.statusLabel}:</span>{" "}
             <span className="inline-flex items-center gap-1.5 text-[var(--terminal-green)]">
               <span className="w-2 h-2 rounded-full bg-[var(--terminal-green)] status-pulse" />
-              {profileData.availability}
+              {profile.availability}
             </span>
           </div>
 
           <div>
             <span className="text-[var(--terminal-accent)] font-semibold">Email:</span>{" "}
             <a
-              href={`mailto:${profileData.email}`}
+              href={`mailto:${profile.email}`}
               className="text-[var(--terminal-blue)] hover:underline"
             >
-              {profileData.email}
+              {profile.email}
             </a>
           </div>
 
           <div className="mt-1">
             <span className="text-[var(--terminal-accent)] font-semibold">Bio:</span>{" "}
-            <span className="text-[var(--terminal-text)]">{profileData.shortBio}</span>
+            <span className="text-[var(--terminal-text)]">{profile.shortBio}</span>
           </div>
 
           {/* Color palette blocks (Linux neofetch easter egg) */}

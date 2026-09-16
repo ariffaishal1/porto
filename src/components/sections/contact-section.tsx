@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import { contactFormSchema, ContactFormData } from "@/lib/validations";
 import { profileData } from "@/data/profile";
+import { useLanguage } from "@/components/theme/language-context";
 
 export function ContactSection() {
+  const { language } = useLanguage();
   const [formData, setFormData] = useState<ContactFormData>({
     name: "",
     email: "",
@@ -61,7 +63,7 @@ export function ContactSection() {
       if (response.ok) {
         setStatusMessage({
           type: "success",
-          text: data.message || `Pesan berhasil dikirim ke ${profileData.email}. Terima kasih!`,
+          text: data.message || (language === "en" ? `Message successfully sent to ${profileData.email}. Thank you!` : `Pesan berhasil dikirim ke ${profileData.email}. Terima kasih!`),
         });
         setFormData({
           name: "",
@@ -73,13 +75,13 @@ export function ContactSection() {
       } else {
         setStatusMessage({
           type: "error",
-          text: data.error || "Gagal mengirim pesan. Silakan coba lagi.",
+          text: data.error || (language === "en" ? "Failed to send message. Please try again." : "Gagal mengirim pesan. Silakan coba lagi."),
         });
       }
     } catch {
       setStatusMessage({
         type: "error",
-        text: "Terjadi kesalahan koneksi jaringan. Silakan coba lagi nanti.",
+        text: language === "en" ? "Network connection error. Please try again later." : "Terjadi kesalahan koneksi jaringan. Silakan coba lagi nanti.",
       });
     } finally {
       setIsSubmitting(false);
@@ -99,10 +101,12 @@ export function ContactSection() {
       </div>
 
       <div className="text-xs text-[var(--terminal-text-dim)] pt-1">
-        Starting interactive contact prompt...
+        {language === "en" ? "Starting interactive contact prompt..." : "Memulai sesi interaktif kontak..."}
       </div>
       <div className="text-xs text-[var(--terminal-accent)] font-medium">
-        ? Isi form di bawah ini untuk mengirim pesan langsung
+        {language === "en"
+          ? "? Fill out the form below to send a direct message"
+          : "? Isi form di bawah ini untuk mengirim pesan langsung"}
       </div>
 
       {/* Form */}
@@ -120,7 +124,7 @@ export function ContactSection() {
         {/* Nama Input */}
         <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
           <label htmlFor="cf-name" className="text-xs font-semibold text-[var(--terminal-amber)] sm:w-20 shrink-0">
-            nama:
+            {language === "en" ? "name:" : "nama:"}
           </label>
           <div className="flex-1 flex flex-col">
             <input
@@ -129,7 +133,7 @@ export function ContactSection() {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="Nama lengkap"
+              placeholder={language === "en" ? "Full name" : "Nama lengkap"}
               required
               className="bg-transparent border-0 border-b border-[var(--terminal-border)] text-xs sm:text-[13px] text-[var(--terminal-text-bright)] py-1 focus:outline-none focus:border-[var(--terminal-accent)] transition-colors placeholder:text-[var(--terminal-text-dim)] placeholder:italic"
             />
@@ -160,7 +164,7 @@ export function ContactSection() {
         {/* Pesan Input */}
         <div className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-3">
           <label htmlFor="cf-message" className="text-xs font-semibold text-[var(--terminal-amber)] sm:w-20 shrink-0 pt-1">
-            pesan:
+            {language === "en" ? "message:" : "pesan:"}
           </label>
           <div className="flex-1 flex flex-col">
             <textarea
@@ -169,7 +173,7 @@ export function ContactSection() {
               rows={3}
               value={formData.message}
               onChange={handleChange}
-              placeholder="Tulis pesan Anda di sini..."
+              placeholder={language === "en" ? "Write your message here..." : "Tulis pesan Anda di sini..."}
               required
               className="bg-transparent border border-[var(--terminal-border)] rounded p-2 text-xs sm:text-[13px] text-[var(--terminal-text-bright)] focus:outline-none focus:border-[var(--terminal-accent)] transition-colors placeholder:text-[var(--terminal-text-dim)] placeholder:italic resize-y"
             />
@@ -183,7 +187,7 @@ export function ContactSection() {
           disabled={isSubmitting}
           className="self-start mt-2 bg-[var(--terminal-accent)] text-[var(--terminal-bg)] font-bold text-xs px-4 py-2 rounded hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
         >
-          {isSubmitting ? "⏳ sending..." : "$ send --submit"}
+          {isSubmitting ? (language === "en" ? "⏳ sending..." : "⏳ mengirim...") : "$ send --submit"}
         </button>
 
         {/* Status Message Display */}
@@ -203,7 +207,7 @@ export function ContactSection() {
 
       {/* Social Links Direct */}
       <div className="flex flex-wrap items-center gap-3 text-xs pt-4 text-[var(--terminal-text-dim)]">
-        <span>Atau hubungi langsung →</span>
+        <span>{language === "en" ? "Or reach out directly →" : "Atau hubungi langsung →"}</span>
         {profileData.socialLinks.github && (
           <a
             href={profileData.socialLinks.github}

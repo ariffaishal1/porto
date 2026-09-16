@@ -21,6 +21,7 @@ export default function CvPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: sanitizeJsonLd(jsonLd) }}
+        suppressHydrationWarning
       />
       <CvClientView
         profile={profileData}

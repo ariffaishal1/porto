@@ -3,11 +3,14 @@
 import React from "react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { LanguageToggle } from "@/components/theme/language-toggle";
+import { useLanguage } from "@/components/theme/language-context";
 import { FileText, Terminal } from "lucide-react";
 import { useCommandPalette } from "@/components/layout/command-palette-context";
 
 export function Navbar() {
   const { openPalette } = useCommandPalette();
+  const { t } = useLanguage();
 
   return (
     <header className="sticky top-0 z-50 bg-[var(--terminal-bg-elevated)] border-b border-[var(--terminal-border)] px-4 py-2.5 flex items-center justify-between backdrop-blur-md print:hidden">
@@ -38,11 +41,11 @@ export function Navbar() {
         <button
           onClick={openPalette}
           className="flex items-center gap-1.5 text-xs text-[var(--terminal-text-dim)] hover:text-[var(--terminal-accent)] bg-[var(--terminal-bg-panel)] hover:bg-[var(--terminal-bg-selection)] border border-[var(--terminal-border)] px-2.5 py-1 rounded transition-colors group cursor-pointer"
-          title="Buka Terminal CLI Interaktif (Ctrl+K / Cmd+K)"
+          title={t.nav.promptTitle}
         >
           <Terminal className="w-3.5 h-3.5 text-[var(--terminal-accent)]" />
           <span className="hidden sm:inline font-mono text-[11px] text-[var(--terminal-text)] group-hover:text-[var(--terminal-accent)]">
-            prompt
+            {t.nav.prompt}
           </span>
           <kbd className="text-[10px] bg-[var(--terminal-bg-elevated)] border border-[var(--terminal-border)] px-1 py-0.2 rounded font-mono text-[var(--terminal-amber)]">
             ⌘K
@@ -52,11 +55,12 @@ export function Navbar() {
         <Link
           href="/cv"
           className="hidden sm:inline-flex items-center gap-1.5 text-xs text-[var(--terminal-accent)] hover:bg-[var(--terminal-bg-selection)] border border-[var(--terminal-border)] px-2.5 py-1 rounded bg-[var(--terminal-bg-panel)] transition-colors font-mono"
-          title="Buka & Cetak Curriculum Vitae resmi"
+          title={t.nav.cvTitle}
         >
           <FileText className="w-3.5 h-3.5" />
-          <span>CV</span>
+          <span>{t.nav.cv}</span>
         </Link>
+        <LanguageToggle />
         <ThemeToggle />
         <span className="text-[11px] text-[var(--terminal-text-dim)] hidden md:inline">
           utf-8

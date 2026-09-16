@@ -1,10 +1,16 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
-import { experienceData } from "@/data/experience";
-import { educationData } from "@/data/education";
+import { getExperienceData } from "@/data/experience";
+import { getEducationData } from "@/data/education";
+import { useLanguage } from "@/components/theme/language-context";
 import { FileText, ExternalLink } from "lucide-react";
 
 export function ExperienceSection() {
+  const { language } = useLanguage();
+  const experiences = getExperienceData(language);
+  const education = getEducationData(language);
   const commitHashes = ["a3f7c9e", "8b2d1f4", "5c9e4a1", "1d8b7e2"];
   const eduHashes = ["f8a2d3c", "e1b9a7f"];
 
@@ -27,17 +33,17 @@ export function ExperienceSection() {
         <Link
           href="/cv"
           className="inline-flex items-center gap-1.5 text-xs font-mono text-[var(--terminal-accent)] hover:bg-[var(--terminal-bg-selection)] border border-[var(--terminal-border)] px-2.5 py-1 rounded bg-[var(--terminal-bg-panel)] transition-colors shadow-sm"
-          title="Buka dan Cetak Curriculum Vitae resmi"
+          title={language === "en" ? "Open & Print official CV" : "Buka dan Cetak Curriculum Vitae resmi"}
         >
           <FileText className="w-3.5 h-3.5" />
-          <span>Lihat / Cetak CV Resmi</span>
+          <span>{language === "en" ? "View / Print Official CV" : "Lihat / Cetak CV Resmi"}</span>
           <ExternalLink className="w-3 h-3 text-[var(--terminal-text-dim)]" />
         </Link>
       </div>
 
       {/* Git Log Entries for Experience */}
       <div className="flex flex-col gap-6 pt-3">
-        {experienceData.map((exp, index) => {
+        {experiences.map((exp, index) => {
           const hash = commitHashes[index % commitHashes.length];
           const isLatest = index === 0;
 
@@ -131,7 +137,7 @@ export function ExperienceSection() {
 
       {/* Git Log Entries for Education */}
       <div className="flex flex-col gap-6 pt-3">
-        {educationData.map((edu, index) => {
+        {education.map((edu, index) => {
           const hash = eduHashes[index % eduHashes.length];
 
           return (
@@ -156,7 +162,7 @@ export function ExperienceSection() {
 
               {/* Author Line */}
               <div className="text-xs">
-                <span className="text-[var(--terminal-text-dim)]">Alumnus:</span>{" "}
+                <span className="text-[var(--terminal-text-dim)]">{language === "en" ? "Alumnus:" : "Alumnus:"}</span>{" "}
                 <span className="text-[var(--terminal-accent)] font-medium">
                   Arif Faishal Nugraha, {edu.titleSuffix}
                 </span>
@@ -164,7 +170,7 @@ export function ExperienceSection() {
 
               {/* Date Line */}
               <div className="text-xs">
-                <span className="text-[var(--terminal-text-dim)]">Lulus:</span>{" "}
+                <span className="text-[var(--terminal-text-dim)]">{language === "en" ? "Graduated:" : "Lulus:"}</span>{" "}
                 <span className="text-[var(--terminal-text-dim)]">{edu.year}</span>
                 <span className="text-[var(--terminal-text-dim)] mx-1.5">&bull;</span>
                 <span className="text-[var(--terminal-text-dim)]">{edu.location}</span>

@@ -2,9 +2,13 @@
 
 import React from "react";
 import Link from "next/link";
-import { projectsData } from "@/data/projects";
+import { getProjectsData } from "@/data/projects";
+import { useLanguage } from "@/components/theme/language-context";
 
 export function ProjectsSection() {
+  const { language, t } = useLanguage();
+  const projects = getProjectsData(language);
+
   return (
     <section id="projects" className="flex flex-col gap-2 pt-4 border-t border-[var(--terminal-border)]">
       {/* Command prompt */}
@@ -19,12 +23,12 @@ export function ProjectsSection() {
       </div>
 
       <div className="text-xs text-[var(--terminal-text-dim)] border-b border-[var(--terminal-border)]/60 pb-1 pt-1 select-none">
-        total {projectsData.length} &nbsp;&nbsp;drwxr-xr-x arif staff
+        total {projects.length} &nbsp;&nbsp;drwxr-xr-x arif staff
       </div>
 
       {/* Projects List */}
       <div className="flex flex-col gap-6 pt-2">
-        {projectsData.map((project) => (
+        {projects.map((project) => (
           <div key={project.slug} className="flex flex-col gap-2">
             {/* ls entry line */}
             <div className="flex items-baseline gap-3 text-xs">
@@ -50,7 +54,7 @@ export function ProjectsSection() {
                 </Link>
                 {project.featured && (
                   <span className="text-[10px] text-[var(--terminal-amber)] border border-[var(--terminal-amber)]/40 px-1.5 py-0.2 rounded">
-                    ★ featured
+                    ★ {t.projects.filterFeatured.toLowerCase()}
                   </span>
                 )}
               </div>
@@ -90,7 +94,7 @@ export function ProjectsSection() {
                   href={`/projects/${project.slug}`}
                   className="text-[var(--terminal-blue)] hover:text-[var(--terminal-accent)] font-medium transition-colors"
                 >
-                  → Catatan Lengkap (Case Study)
+                  → {language === "en" ? "Full Case Study" : "Catatan Lengkap (Case Study)"}
                 </Link>
                 {project.demoUrl && (
                   <a
@@ -99,7 +103,7 @@ export function ProjectsSection() {
                     rel="noopener noreferrer"
                     className="text-[var(--terminal-blue)] hover:text-[var(--terminal-accent)] font-medium transition-colors"
                   >
-                    → Live Demo
+                    → {t.projects.liveDemo}
                   </a>
                 )}
                 {project.repositoryUrl && (
@@ -109,7 +113,7 @@ export function ProjectsSection() {
                     rel="noopener noreferrer"
                     className="text-[var(--terminal-blue)] hover:text-[var(--terminal-accent)] font-medium transition-colors"
                   >
-                    → Source Code
+                    → {t.projects.repo}
                   </a>
                 )}
               </div>

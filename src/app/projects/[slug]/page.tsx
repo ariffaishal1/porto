@@ -65,6 +65,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: sanitizeJsonLd(jsonLd) }}
+        suppressHydrationWarning
       />
       {/* Command prompt nav */}
       <div className="flex items-baseline flex-wrap gap-0 text-sm font-medium">
@@ -81,7 +82,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           href="/#projects"
           className="text-xs text-[var(--terminal-blue)] hover:text-[var(--terminal-accent)] transition-colors"
         >
-          ← cd .. (Kembali ke Daftar Proyek)
+          ← cd .. (cd ~/projects)
         </Link>
       </div>
 
@@ -104,14 +105,14 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           <div className="flex flex-wrap gap-4 text-xs pt-2 border-t border-[var(--terminal-border)]/50">
             {projectMdx.meta.role && (
               <div>
-                <span className="text-[var(--terminal-text-dim)]">Peran:</span>{" "}
+                <span className="text-[var(--terminal-text-dim)]">Role:</span>{" "}
                 <span className="text-[var(--terminal-text-bright)] font-medium">
                   {projectMdx.meta.role}
                 </span>
               </div>
             )}
             <div>
-              <span className="text-[var(--terminal-text-dim)]">Tahun:</span>{" "}
+              <span className="text-[var(--terminal-text-dim)]">Year:</span>{" "}
               <span className="text-[var(--terminal-text-bright)] font-medium">
                 {projectMdx.meta.year}
               </span>
@@ -140,7 +141,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                   rel="noopener noreferrer"
                   className="text-[var(--terminal-blue)] hover:text-[var(--terminal-accent)] font-medium transition-colors"
                 >
-                  → Kunjungi Live Demo
+                  → Live Demo
                 </a>
               )}
               {projectData?.repositoryUrl && (
@@ -174,9 +175,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-mono text-[10px] text-[var(--terminal-blue)] hover:text-[var(--terminal-accent)] hover:underline transition-colors"
-                title="Buka gambar ukuran penuh di tab baru"
+                title="Open full image in new tab"
               >
-                [buka ukuran penuh ↗]
+                [fullscreen ↗]
               </a>
             </div>
             <div className="relative w-full bg-[var(--terminal-bg-panel)] flex items-center justify-center p-2 sm:p-3 overflow-hidden">

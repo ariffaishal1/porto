@@ -1,6 +1,7 @@
 import { Experience } from "@/types/experience";
+import type { Language } from "@/lib/i18n/dictionaries";
 
-export const experienceData: Experience[] = [
+export const experienceDataId: Experience[] = [
   {
     company: "RSUD Majalengka",
     role: "Junior Software Developer",
@@ -46,3 +47,57 @@ export const experienceData: Experience[] = [
     technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Git"],
   },
 ];
+
+export const experienceDataEn: Experience[] = [
+  {
+    company: "RSUD Majalengka",
+    role: "Junior Software Developer",
+    location: "Majalengka, West Java, Indonesia",
+    startDate: "2026",
+    endDate: "Present",
+    current: true,
+    description: "Responsible for maintenance, feature development, and performance optimization of hospital management information systems (SIMRS) and clinical operational software.",
+    achievements: [
+      "Contributed to building and maintaining SIMRS modules to streamline daily workflows for medical practitioners and administrative departments.",
+      "Engineered RESTful API integrations and optimized database queries ensuring fast and reliable data transmission across departments.",
+      "Conducted debugging, legacy codebase refactoring, and UI/UX improvements for healthcare internal staff."
+    ],
+    technologies: ["JavaScript", "TypeScript", "Dart", "PostgreSQL", "RESTful API", "Git", "Flutter"],
+  },
+  {
+    company: "Capstone — Landslide Early Warning System",
+    role: "IoT & Mobile Developer (Academic Research)",
+    location: "Indonesia",
+    startDate: "2025",
+    endDate: "2026",
+    current: false,
+    description: "Designed and implemented a real-time soil stability monitoring and landslide early warning system using an Android mobile application and long-range LoRa wireless telemetry.",
+    achievements: [
+      "Engineered an Android mobile app for real-time visualization of soil movement, ground tilt, and moisture telemetry sensors.",
+      "Integrated long-range, low-power LoRa wireless communications to monitor critical slope disaster zones situated in cellular dead zones.",
+      "Designed threshold-based risk algorithms and an automated push alerting mechanism upon detecting ground shift indications."
+    ],
+    technologies: ["Android", "Flutter", "Dart", "LoRa", "IoT Sensors", "Microcontroller"],
+  },
+  {
+    company: "Academic & Independent Engineering",
+    role: "Software Developer",
+    location: "Indonesia",
+    startDate: "2024",
+    endDate: "2025",
+    current: false,
+    description: "Explored and developed modern full-stack web applications and AI integration prototypes throughout academic and personal projects.",
+    achievements: [
+      "Architected and built 'Ruang PRD', an interactive AI-assisted requirements workshop platform with Next.js, TypeScript, Tailwind CSS, and LLMs.",
+      "Maintained disciplined Git version control, structured testing practices, and clean architecture principles throughout all software deliverables."
+    ],
+    technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Git"],
+  },
+];
+
+// Default export
+export const experienceData = experienceDataId;
+
+export function getExperienceData(lang: Language): Experience[] {
+  return lang === "en" ? experienceDataEn : experienceDataId;
+}
